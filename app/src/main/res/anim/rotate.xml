@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <scale
+        android:pivotY="50%"
+        android:pivotX="50%"
+        android:fromXScale="0dp"
+        android:fromYScale="0dp"
+        android:toYScale="195dp"
+        android:duration="1000"
+        android:toXScale="195dp"
+
+
+        />
+    <rotate
+        android:fromDegrees="0"
+        android:toDegrees="360"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:repeatMode="restart"
+        android:repeatCount="infinite"
+        android:duration="5000"
+        android:interpolator="@android:anim/bounce_interpolator"/>
+
+</set>
