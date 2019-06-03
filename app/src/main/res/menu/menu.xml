@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/d2d">
+        <item
+            android:id="@+id/add"
+            android:title="@string/add_new_device"/>
+    </group>
+    <group
+        android:id="@+id/d2d2">
+        <item
+            android:id="@+id/exp"
+
+            android:title="@string/file_explorer" />
+    </group>
+    <group
+        android:id="@+id/d2d3">
+        <item
+            android:id="@+id/setting"
+
+            android:title="@string/settings"/>
+    </group>
+    <group
+        android:id="@+id/d2d4">
+        <item
+            android:id="@+id/help"
+            android:title="@string/get_help"/>
+    </group>
+</menu>

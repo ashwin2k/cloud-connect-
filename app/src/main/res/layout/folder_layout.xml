@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="10dp"
+    android:background="@drawable/press"
     android:layout_width="wrap_content" android:layout_height="wrap_content">
 
     <android.support.v7.widget.AppCompatImageView
@@ -14,12 +15,13 @@
         app:srcCompat="@drawable/ic_folder" />
 
     <TextView
+        android:textColor="?android:attr/textColorPrimary"
         android:id="@+id/foldername"
         android:layout_width="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
         android:layout_below="@+id/folder"
-        android:textColor="#FFF"
+        android:layout_centerHorizontal="true"
+        android:text="@string/folder"
 
-        android:text="@string/folder" />
+     />
 </RelativeLayout>

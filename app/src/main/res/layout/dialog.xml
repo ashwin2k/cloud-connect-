@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:background="@drawable/layout_rounedcor"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="250dp"
+    android:layout_height="200dp">
+
+
+    <TextView
+
+        android:textColor="?android:attr/textColorPrimary"
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:textSize="15dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:text="File Name" />
+
+    <TextView
+
+        android:id="@+id/filename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentEnd="true"
+        android:textColor="?android:attr/textColorSecondary"
+
+       android:layout_marginEnd="30dp"
+        android:layout_weight="2"
+
+        android:textSize="15dp" />
+    <TextView
+        android:layout_below="@id/textView5"
+        android:textColor="?android:attr/textColorPrimary"
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:textSize="15dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:text="Uploading to" />
+
+    <TextView
+        android:layout_below="@id/filename"
+        android:id="@+id/uploc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentEnd="true"
+        android:textColor="?android:attr/textColorSecondary"
+       android:layout_marginEnd="30dp"
+        android:layout_weight="2"
+        android:textSize="15dp" />
+    <TextView
+        android:layout_below="@id/textView6"
+        android:textColor="?android:attr/textColorPrimary"
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:textSize="15dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:text="Device" />
+
+    <TextView
+        android:layout_below="@id/uploc"
+        android:id="@+id/device"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentEnd="true"
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_marginEnd="30dp"
+        android:layout_weight="2"
+        android:textSize="15dp" />
+</RelativeLayout>

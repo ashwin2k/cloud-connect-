@@ -11,6 +11,7 @@ import org.apache.commons.net.ftp.FTPFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import static android.content.ContentValues.TAG;
 
@@ -18,7 +19,7 @@ import static android.content.ContentValues.TAG;
 public class downup extends AsyncTask<String,Void,Void> {
     String dwld_link;
     boolean login;
-    FileOutputStream fos;
+    OutputStream fos;
     File output;
 
     @Override
@@ -55,7 +56,7 @@ public class downup extends AsyncTask<String,Void,Void> {
             fos = new FileOutputStream("/storage/emulated/0/"+popper(strings[0]));
           Log.i("NAME1","dd42ddd");
             client.retrieveFile(dwld_link, fos);
-            System.out.println("downloading 	...");
+            Log.d("new", "DOWNLOADING"+dwld_link);
 
 
             if(fos!=null)

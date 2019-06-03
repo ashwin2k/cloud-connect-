@@ -50,7 +50,7 @@ public class grid_adapter extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.folder_layout, null);
             TextView name=(TextView)convertView.findViewById(R.id.foldername);
-
+            
             name.setText(file.getName());
             if(file.isFile())
             {
@@ -65,4 +65,5 @@ public class grid_adapter extends BaseAdapter {
         }
         return convertView;
     }
+
 }
