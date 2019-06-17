@@ -2,7 +2,7 @@
 <RelativeLayout
     android:background="?android:attr/colorBackground"
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="800dp"
     android:paddingBottom="20dp">
     <TextView
         android:id="@+id/net_text"
@@ -44,5 +44,22 @@
         android:textStyle="bold"
         android:layout_marginTop="30dp"
         />
+    <TextView
+        android:id="@+id/prev_net"
+        android:layout_below="@+id/otherBut"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Previous locations"
+        android:textSize="20dp"
+        android:textStyle="bold|italic"
+        android:textColor="?android:textColorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <ListView
+        android:layout_below="@id/prev_net"
+        android:id="@+id/prevlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 
 </RelativeLayout>

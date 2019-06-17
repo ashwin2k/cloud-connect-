@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#373542"
+    android:id="@+id/load"
+    android:layout_width="match_parent" android:layout_height="50dp">
+    <ProgressBar
+        android:id="@+id/prog"
+        android:indeterminateTint="?android:attr/colorPrimary"
+        android:layout_marginStart="45dp"
+        android:layout_centerVertical="true"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:textSize="15dp"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="90dp"
+        android:textColor="#FFF"
+        android:text="Fetching files..."
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

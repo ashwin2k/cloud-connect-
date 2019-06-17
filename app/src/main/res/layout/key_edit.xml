@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:paddingEnd="30dp"
+    android:paddingStart="30dp"
+    android:paddingBottom="30dp"
+    android:paddingTop="15dp">
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:stretchColumns="1"
+        android:layout_height="wrap_content">
+   <TextView
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/conext"
+        android:textStyle="bold"
+       android:textAlignment="center"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="23dp"
+        android:text="Connect to external server"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+        <TableRow
+            android:layout_marginTop="10dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/conext">
+            <TextView
+                android:id="@+id/wifi_name"
+                android:textColor="?android:attr/textColorPrimary"
+                android:text="Name"
+                android:layout_marginTop="19dp"
+                android:textSize="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <EditText
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:hint="Give it a name"
+                android:layout_marginStart="30dp"
+                android:id="@+id/get_name"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:textSize="10dp" />
+        </TableRow>
+    <TableRow
+        android:layout_height="50dp"
+        >
+        <TextView
+        android:id="@+id/wifi_gate"
+        android:textColor="?android:attr/textColorPrimary"
+        android:text="Address"
+        android:layout_marginTop="19dp"
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+        <EditText
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:hint="Eg: 192.168.0.1"
+            android:layout_marginStart="30dp"
+            android:id="@+id/get_gate"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:textSize="10dp" />
+    </TableRow>
+    <TableRow
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/wifi_admin"
+            android:textColor="?android:attr/textColorPrimary"
+            android:text="Admin"
+            android:layout_below="@id/wifi_gate"
+            android:layout_marginTop="19dp"
+            android:textSize="20dp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <EditText
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:hint="Enter username"
+            android:id="@+id/get_admin"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/get_gate"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="30dp"
+
+            android:textSize="10dp" />
+    </TableRow>
+    <TableRow
+        android:layout_height="50dp">
+        <TextView
+        android:id="@+id/wifi_password"
+        android:textColor="?android:attr/textColorPrimary"
+        android:text="Password"
+        android:layout_below="@id/wifi_admin"
+        android:layout_marginTop="19dp"
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+        <EditText
+            android:clickable="true"
+            android:focusable="true"
+
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_marginStart="30dp"
+            android:inputType="textPassword"
+            android:id="@+id/get_password"
+            android:layout_below="@id/get_admin"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="30dp"
+            android:hint="Enter password"
+            android:textSize="10dp" /></TableRow>
+
+
+        <Switch
+            android:layout_marginEnd="30dp"
+            android:textSize="18dp"
+            android:layout_marginTop="12dp"
+            android:id="@+id/anonymous_admn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/get_password"
+            android:layout_centerHorizontal="true"
+            android:text="Anonymous login?" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/extcon"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_below="@id/wifi_password"
+        android:bottomRightRadius="2dp"
+
+        android:foreground="?android:attr/selectableItemBackground"
+        android:bottomLeftRadius="2dp"
+        android:topLeftRadius="2dp"
+        android:topRightRadius="2dp"
+        android:background="#1976D2"
+        android:textColor="#FFF"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:layout_centerHorizontal="true"
+
+        android:text="Connect"
+
+        android:layout_marginTop="20dp"/>
+    </TableLayout>
+
+
+
+
+</RelativeLayout>

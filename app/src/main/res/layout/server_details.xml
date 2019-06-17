@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="15dp"
+    android:layout_width="350dp" android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/q1"
+        android:layout_width="wrap_content"
+        android:textSize="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_height="wrap_content"
+        android:text="Server id"/>
+    <TextView
+        android:id="@+id/q2"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:textSize="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="12dp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_height="wrap_content"
+        android:text="Nan" />
+    <TextView
+        android:id="@+id/w1"
+        android:layout_below="@id/q1"
+        android:layout_width="wrap_content"
+        android:textSize="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_height="wrap_content"
+        android:text="Gateway"/>
+    <TextView
+        android:id="@+id/w2"
+        android:layout_below="@id/q2"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:textSize="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="12dp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_height="wrap_content"
+        android:text="Nan" />
+    <TextView
+        android:id="@+id/e1"
+        android:layout_below="@id/w1"
+        android:layout_width="wrap_content"
+        android:textSize="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_height="wrap_content"
+        android:text="Admin"/>
+    <TextView
+        android:id="@+id/e2"
+        android:layout_below="@id/w2"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:textSize="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="12dp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_height="wrap_content"
+        android:text="Nan" />
+    <TextView
+        android:id="@+id/r1"
+        android:layout_below="@id/e1"
+        android:layout_width="wrap_content"
+        android:textSize="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_height="wrap_content"
+        android:text="Root directory"/>
+    <TextView
+        android:id="@+id/r2"
+        android:layout_below="@id/e2"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:textSize="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="12dp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_height="wrap_content"
+        android:text="Nan" />
+    <ImageView
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/delete"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:id="@+id/delete_net"
+        android:layout_below="@id/r2"
+        android:layout_width="52dp"
+        android:layout_height="52dp" />
+</RelativeLayout>

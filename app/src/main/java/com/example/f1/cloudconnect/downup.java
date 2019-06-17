@@ -1,5 +1,7 @@
 package com.example.f1.cloudconnect;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -21,15 +23,28 @@ public class downup extends AsyncTask<String,Void,Void> {
     boolean login;
     OutputStream fos;
     File output;
-
+    String password;
+    DBHelper dbsql;
+    Context mContext;
+    String admin;
+    public downup(String admn,String pass,Context context)
+    {
+        this.mContext=context;
+        this.admin=admn;
+        this.password=pass;
+    }
     @Override
     protected Void doInBackground(String... strings) {
+        SharedPreferences preferences = mContext.getSharedPreferences("Themes", 0);
+        String gate=preferences.getString("CurrentKey","null");
+        dbsql=new DBHelper(mContext);
+        String g=dbsql.getGateway(gate);
         FTPClient client = null;
         if (client == null) {
             client = new FTPClient();
             try {
-                client.connect("192.168.0.1");
-                login = client.login("admin1", "2d5dg5yn");
+                client.connect(g);
+                login = client.login(admin, password);
             } catch (IOException e) {
 
                 e.printStackTrace();

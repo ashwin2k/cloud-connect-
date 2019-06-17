@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="false"
+    android:focusable="false"
+
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/posid"
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:textSize="40dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:text="1."
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            />
+        <TextView
+            android:id="@+id/keyvalue"
+            android:textColor="?android:attr/textColorPrimary"
+            android:text="Home"
+            android:layout_marginTop="12dp"
+            android:textSize="16dp"
+            android:layout_marginStart="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="12dp"
+            android:layout_below="@id/keyvalue"
+            android:id="@+id/gatevalue"
+            android:layout_marginTop="3dp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:text="192.168.0.1"
+            android:layout_marginStart="60dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    <TextView
+        android:textSize="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_height="wrap_content"
+        android:text="..."/>
+
+</RelativeLayout>

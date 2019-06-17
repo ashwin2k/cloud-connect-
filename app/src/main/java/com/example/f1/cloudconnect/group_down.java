@@ -3,6 +3,7 @@ package com.example.f1.cloudconnect;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -24,14 +25,21 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
     public static final String NOTIFICATION_CHANNEL_ID = "10001";
     ArrayList<Uri> files;
     String dwld_link;
+    DBHelper dbsql;
+    int current;
     boolean login;
+    boolean status;
     FileOutputStream fos;
     int progress=0;
     int size=100;
     File output;
-    public group_down(Context context)
+    String password;
+    String admin;
+    public group_down(Context context,String admn,String pass)
     {
         mContext=context;
+        this.admin=admn;
+        this.password=pass;
     }
     public void notifier(ArrayList<String> arrayLists)
     {
@@ -66,14 +74,18 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
     }
     @Override
     protected ArrayList<Uri> doInBackground(ArrayList<String>... arrayLists) {
+        SharedPreferences preferences = mContext.getSharedPreferences("Themes", 0);
+        String gate=preferences.getString("CurrentKey","null");
+        dbsql=new DBHelper(mContext);
+        String g=dbsql.getGateway(gate);
         notifier(arrayLists[0]);
         files=new ArrayList<>();
         FTPClient client = null;
         if (client == null) {
             client = new FTPClient();
             try {
-                client.connect("192.168.0.1");
-                login = client.login("admin1", "2d5dg5yn");
+                client.connect(g);
+                login = client.login(admin, password);
             } catch (IOException e) {
 
                 e.printStackTrace();
@@ -93,16 +105,18 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
             Log.i("NAME1","Connection failed...");
         }
         fos=null;
-        int current=1;
+        current=1;
         for(String link: arrayLists[0])
         {
             try {
                 client.changeWorkingDirectory(extract(link));
                 fos = new FileOutputStream("/storage/emulated/0/"+popper(link));
                 Log.i("NAME1",popper(link));
-                client.retrieveFile(popper(link), fos);
-                publishProgress(current);
-                current=current+1;
+                status=client.retrieveFile(popper(link), fos);
+                if(status) {
+                    publishProgress(current);
+                    current = current + 1;
+                }
                 Log.d("DOWN", "DOWNLOADING"+link);
                 files.add(Uri.parse("/storage/emulated/0/"+popper(link)));
                 Log.d("FILES"," "+files.size());
@@ -124,6 +138,8 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
                 .setOngoing(false)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentInfo(size+" files have been downloaded");
+        if(current<size)
+            zBuilder.setContentText(size-current+" files failed to download");
         mNotificationManager.notify(1,zBuilder.build());
         super.onPostExecute(aVoid);
 

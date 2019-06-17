@@ -1,6 +1,7 @@
 package com.example.f1.cloudconnect;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.FileObserver;
 import android.util.Log;
 
@@ -15,19 +16,26 @@ public class RecursiveFileObserver extends FileObserver {
 
     String aboslutePath;
     ArrayList<stream_details> links=new ArrayList<>();
-
+    SharedPreferences preferences;
     File upload_file;
+    DBHelper dbsql;
     InputStream in;
+    String admin;
+    String pass;
     Context context;
-    public RecursiveFileObserver(String path,Context con) {
+    public RecursiveFileObserver(String path,Context con,String admn,String pwd) {
         super(path,CREATE);
         Log.d("FileObserver",path);
         aboslutePath = path;
         this.context=con;
+        this.admin=admn;
+        this.pass=pwd;
     }
 
     @Override
     public void onEvent(int event, String path) {
+        dbsql=new DBHelper(context);
+        preferences=context.getSharedPreferences("Themes",0);
         Log.d("FILE","Event Triggered" +event);
         switch (event) {
             case FileObserver.DELETE_SELF:
@@ -45,12 +53,13 @@ public class RecursiveFileObserver extends FileObserver {
                     e.printStackTrace();
                 }
                 stream_details sd=new stream_details();
-                sd.setLocation("usb1_1");
+                sd.setLocation(dbsql.getUploadDir(preferences.getString("CurrentKey","")));
                 sd.setFile_name(path);
+                sd.optional_link=aboslutePath+path;
                 sd.setInputStream(in);
                 Log.d("FILE","CREATED at "+path);
                 Log.d("FILE","READY FOR UPLOAD ");
-                upload up=new upload(context);
+                upload up=new upload(context,admin,pass);
                 up.execute(sd);
                 break;
             case FileObserver.DELETE:
@@ -61,7 +70,7 @@ public class RecursiveFileObserver extends FileObserver {
     }
     void upload(stream_details sdf)
     {
-        upload up=new upload(context);
+        upload up=new upload(context,admin,pass);
         up.execute(sdf);
     }
 }

@@ -3,6 +3,7 @@ package com.example.f1.cloudconnect;
 import java.io.InputStream;
 
 public class stream_details {
+    public String optional_link;
     public void setInputStream(InputStream inputStream) {
         this.inputStream = inputStream;
     }

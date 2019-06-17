@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/cust"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#373542"
+    android:layout_width="match_parent" android:layout_height="50dp">
+    <TextView
+        android:layout_centerVertical="true"
+        android:layout_marginStart="12dp"
+        android:text="Make this as default upload location?"
+        android:textColor="#FFF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:textColor="?android:attr/colorPrimary"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:background="#373542"
+        android:id="@+id/default_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp"
+        android:text="OK" />
+
+</RelativeLayout>

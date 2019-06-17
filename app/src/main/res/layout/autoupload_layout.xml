@@ -22,19 +22,32 @@
             layout="@layout/app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:id="@+id/service"
+        android:layout_marginTop="80dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_marginStart="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/project"/>
         <TextView
-            android:layout_marginTop="20dp"
-            android:id="@+id/turn"
-            android:layout_below="@id/app_x"
-            android:layout_marginStart="20dp"
-            android:textSize="20dp"
-            android:textStyle="bold"
+            android:id="@+id/x1"
             android:textColor="?android:attr/textColorPrimary"
+            android:text="Turn on auto backup?"
+            android:layout_centerVertical="true"
+            android:textSize="16dp"
+            android:layout_marginStart="60dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Turn on service?"/>
+            android:layout_height="wrap_content" />
         <Switch
-            android:layout_marginTop="20dp"
+            android:layout_centerVertical="true"
             android:id="@+id/switch1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,9 +55,9 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="27dp"
              />
-
+    </RelativeLayout>
         <TextView
-            android:layout_below="@id/turn"
+            android:layout_below="@id/service"
             android:id="@+id/ss"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,54 +74,62 @@
             android:id="@+id/direc_list"
             android:layout_below="@id/ss"
             android:layout_marginStart="40dp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_marginEnd="40dp"
             android:layout_height="300dp"/>
-        <Button
-            android:id="@+id/addLis"
-            android:layout_width="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_height="wrap_content"
-            android:bottomRightRadius="2dp"
-            android:bottomLeftRadius="2dp"
-            android:topLeftRadius="2dp"
-            android:topRightRadius="2dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:background="#1976D2"
-            android:textColor="#FFF"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:layout_below="@id/direc_list"
-            android:text="+"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            android:layout_marginTop="0dp"
-            />
-        <Button
-            android:id="@+id/delLis"
-            android:layout_width="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_height="wrap_content"
-            android:bottomRightRadius="2dp"
-            android:bottomLeftRadius="2dp"
-            android:topLeftRadius="2dp"
-            android:topRightRadius="2dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:background="#1976D2"
+    <RelativeLayout
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:id="@+id/addLis"
 
-            android:textColor="#FFF"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:layout_below="@id/addLis"
-            android:text="clear"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"
-            />
+        android:layout_below="@id/direc_list"
+        android:layout_marginTop="10dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_marginStart="10dp"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/add"/>
+        <TextView
+            android:id="@+id/e1"
+            android:textColor="?android:attr/textColorPrimary"
+            android:text="Add a directory"
+            android:layout_centerVertical="true"
+            android:textSize="16dp"
+            android:layout_marginStart="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:id="@+id/delLis"
+        android:layout_below="@id/addLis"
+        android:layout_marginTop="15dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_marginStart="10dp"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/remove"/>
+        <TextView
+            android:id="@+id/z1"
+            android:textColor="?android:attr/textColorPrimary"
+            android:text="Clear all"
+            android:layout_centerVertical="true"
+            android:textSize="16dp"
+            android:layout_marginStart="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 
 
     </RelativeLayout>

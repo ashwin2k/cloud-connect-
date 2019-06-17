@@ -1,9 +1,12 @@
 package com.example.f1.cloudconnect;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
@@ -16,13 +19,23 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.io.File;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
+import java.text.DecimalFormat;
 import java.util.Formatter;
 
 import static android.content.Context.WIFI_SERVICE;
@@ -31,7 +44,11 @@ import static android.content.Context.WIFI_SERVICE;
 public class Utility {
 
 
-
+    public static void setAnim(RelativeLayout r, Animation anim)
+    {
+        r.setAnimation(anim);
+        r.startAnimation(anim);
+    }
 
     public static String getCurrentSSId(Context context)
     {
@@ -105,6 +122,111 @@ public class Utility {
         result=path.substring(0,len-1);
         return result;
     }
+    public static Boolean wifiEnabledCheck(Context context)
+    {
+        WifiManager mng=(WifiManager)context.getSystemService(WIFI_SERVICE);
+        return mng.isWifiEnabled();
+    }
+    public static void menuOperations(NavigationView nav, final Context con, final View view) {
+        final LayoutInflater inflater=(LayoutInflater)con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        SharedPreferences preferences = con.getSharedPreferences("Themes", 0);
+        final String cur_key = preferences.getString("CurrentKey", null);
+        nav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                DBHelper dbsql = new DBHelper(con);
+                boolean servsize=dbsql.checkExist(cur_key, 0);
+                int id = item.getItemId();
+                if (id == R.id.setting) {
+                    Log.d("MAX", "add");
+                    Intent men = new Intent(con, settings.class);
+                    con.startActivity(men);
+                }
+                if (id == R.id.add) {
+                    Log.d("MAX", "add");
+                    Intent men = new Intent(con, MainActivity.class);
+                    con.startActivity(men);
+                }
+                if (id == R.id.backup) {
+                    if(servsize) {
+                        Log.d("MAX", "setting");
+                        Intent men = new Intent(con, AutoUpload.class);
+                        con.startActivity(men);
+                    }
+                   else{
+
+                        Snackbar.make(view,"Please add a server and try again!",Snackbar.LENGTH_LONG).setAction("Dismiss", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // Call your action method here
+
+                            }
+                        }).show();
+                    }
+                }
+                if(id==R.id.exp){
+
+                    if (servsize) {
+                        Intent ff = new Intent(con, file_explorer.class);
+                        ff.putExtra("current", cur_key);
+                        con.startActivity(ff);
+                    }
+                    else{
+                        Snackbar.make(view,"Please add a server and try again!",Snackbar.LENGTH_LONG).setAction("Dismiss", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        }).show();
+
+
+                    }
+                }
+                return true;
+            }
+        });
+
+
+    }
+    public static void changeTheme(Context context)
+    {
+        SharedPreferences preferences=context.getSharedPreferences("Themes",0);
+        boolean choice=preferences.getBoolean("CurrentTheme",false);
+        if(choice)
+        {
+            context.setTheme(R.style.AppThemeLight);
+        }
+        else
+            context.setTheme(R.style.AppTheme);
+    }
+    public static String sizeCap(double size)
+    {
+        DecimalFormat df=new DecimalFormat("#.##");
+        int degree=0;
+        double sizecat=0;
+        while(size>1000) {
+
+                size = (size / 1024);
+                sizecat = size;
+                degree++;
+
+        }
+        switch(degree)
+        {
+            case 0:
+                return df.format(sizecat)+" B";
+            case 1:
+                return df.format(sizecat)+" KB";
+            case 2:
+                return df.format(sizecat)+" MB";
+            case 3:
+                return df.format(sizecat)+" GB";
+            case 4:
+                return df.format(sizecat)+" TB";
+        }
+        return (df.format(sizecat)+"");
+    }
+
 
 
 
@@ -252,5 +374,7 @@ public class Utility {
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
+
+
 
 }

@@ -25,18 +25,25 @@ import java.io.InputStream;
 
 public class recieve_share extends AppCompatActivity {
     Uri uri;
-    WindowManager  windowManager;
-    View dialogView;
+
     stream_details stream_details;
     Context con;
     View dial;
     TextView filenm;
+    String admin;
+    String pass;
+    DBHelper dbsql;
     TextView uploc;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         con=this;
         SharedPreferences preferences=this.getSharedPreferences("Themes",0);
         Boolean choice=preferences.getBoolean("CurrentTheme",false);
+        dbsql=new DBHelper(this);
+
+        admin=dbsql.getAdmin(preferences.getString("CurrentKey",null));
+        pass=dbsql.getPassword(preferences.getString("CurrentKey",null));
+
         if(choice)
         {
             this.setTheme(R.style.AppThemeLight);
@@ -45,11 +52,6 @@ public class recieve_share extends AppCompatActivity {
             this.setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.upload_dialog);
-
-
-
-
-
         Intent share=getIntent();
         uri=share.getParcelableExtra(Intent.EXTRA_STREAM);
         TextView header=findViewById(R.id.header_text);
@@ -61,7 +63,7 @@ public class recieve_share extends AppCompatActivity {
             stream_details.setInputStream(file);
 
             stream_details.setFile_name(file_explorer.queryName(getContentResolver(),uri));
-            stream_details.setLocation("usb1_1");
+            stream_details.setLocation(dbsql.getUploadDir(preferences.getString("CurrentKey",null)));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -78,15 +80,21 @@ public class recieve_share extends AppCompatActivity {
         alert.setView(alertLayout);
         uploc=alertLayout.findViewById(R.id.uploc);
         filenm=alertLayout.findViewById(R.id.filename);
-        filenm.setText(file_explorer.queryName(getContentResolver(),uri));
-        uploc.setText("usb1_1");
+        String txt=file_explorer.queryName(getContentResolver(),uri);
+        if(txt.length()>8)
+        {
+            filenm.setText(txt.substring(0,8)+"...");
+        }
+        else
+            filenm.setText(txt);
+        uploc.setText(dbsql.getUploadDir(preferences.getString("CurrentKey",null)));
         alert.setCancelable(false);
         alert.setPositiveButton("Upload", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
 
-                    upload up=new upload(con);
+                    upload up=new upload(con,admin,pass);
                     up.execute(stream_details);
                     finish();
 

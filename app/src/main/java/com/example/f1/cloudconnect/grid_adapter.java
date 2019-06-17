@@ -1,6 +1,8 @@
 package com.example.f1.cloudconnect;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +37,7 @@ public class grid_adapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(int position){
         return null;
     }
 
@@ -46,11 +48,16 @@ public class grid_adapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        SharedPreferences preferences=context.getSharedPreferences("Themes",0);
+        Boolean choice=preferences.getBoolean("CurrentTheme",false);
         FTPFile file=(FTPFile) file_list[position];
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.folder_layout, null);
             TextView name=(TextView)convertView.findViewById(R.id.foldername);
-            
+            if(choice)
+                name.setTextColor(Color.BLACK);
+            else
+                name.setTextColor(Color.WHITE);
             name.setText(file.getName());
             if(file.isFile())
             {

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="prf_main">
+    <PreferenceCategory
+        android:title="Network">
+        <Preference
+            android:icon="@drawable/ic_wifi"
+            android:title="Wifi"
+            android:summary="Home"/>
+        <Preference
+            android:icon="@drawable/ic_wifi"
+            android:title="LinkSpeed"
+            android:summary="92mbps" />
+        <Preference
+            android:icon="@drawable/ic_fence"
+            android:title="Gateway"
+            android:summary="192.168.0.1"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="About">
+        <Preference
+            android:title="Version"
+            android:summary="v1.2"
+            android:icon="@drawable/info"/>
+        <Preference
+            android:title="Github"
+            android:summary="v1.2"
+            android:icon="@drawable/ic_github"/>
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

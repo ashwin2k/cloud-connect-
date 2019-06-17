@@ -3,6 +3,8 @@ package com.example.f1.cloudconnect;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -24,13 +26,19 @@ public class upload extends AsyncTask<stream_details,Integer,Void> {
     private Context mContext;
     int size=100;
     int progress=0;
+    String status="failed";
     String notify_name;
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder,zBuilder;
     public static final String NOTIFICATION_CHANNEL_ID = "10001";
-    public upload(Context con)
+    String password;
+    String admin;
+    DBHelper dbsql;
+    public upload(Context context,String admn,String pass)
     {
-        this.mContext=con;
+        mContext=context;
+        this.admin=admn;
+        this.password=pass;
     }
     public void notifier(stream_details[] stream_details)
     {
@@ -65,28 +73,33 @@ public class upload extends AsyncTask<stream_details,Integer,Void> {
     }
     @Override
     protected Void doInBackground(stream_details... details) {
+        SharedPreferences preferences = mContext.getSharedPreferences("Themes", 0);
+        String gate=preferences.getString("CurrentKey","null");
+        dbsql=new DBHelper(mContext);
+        String g=dbsql.getGateway(gate);
         notifier(details);
+
         FTPClient client=null;
         if(client==null)
         {
             client = new FTPClient();
+            client.setConnectTimeout(5000);
             try {
-                client.connect("192.168.0.1");
-            } catch (SocketException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                client.connect(g);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
+                status="failed";
+                dbsql.addUpload(details[0].getFile_name(),details[0].optional_link,details[0].getFile_name(),details[0].getLocation());
                 e.printStackTrace();
             }
 
         }
         boolean login = false;
         try {
-            login = client.login("admin1", "2d5dg5yn");
+            login = client.login(admin, password);
         } catch (IOException e) {
+            status="failed";
             e.printStackTrace();
-        }
+            dbsql.addUpload(details[0].getFile_name(),details[0].optional_link,details[0].getFile_name(),details[0].getLocation());        }
 
         // If login is true notify user
 
@@ -98,30 +111,33 @@ public class upload extends AsyncTask<stream_details,Integer,Void> {
 
         } else {
             System.out.println("Connection fail...");
-        }
+            status="failed";
+            dbsql.addUpload(details[0].getFile_name(),details[0].optional_link,details[0].getFile_name(),details[0].getLocation());        }
 
-
-
-        String name=details[0].getLocation()+'/'+details[0].getFile_name();
+             String name=details[0].getLocation()+'/'+details[0].getFile_name();
 
 
         try {
-
             boolean res= client.storeFile(name,details[0].getInputStream());
             int current=0;
             if(!res)
             {
+                status="failed";
                 Log.d("U1P","PROBLEM UPLOADING AT "+name);
+                dbsql.addUpload(details[0].getFile_name(),details[0].optional_link,details[0].getFile_name(),details[0].getLocation());            }
+            else {
+                status="complete";
+                Log.d("U1P", "UPLOADING AT " + name);
             }
-            else
-                Log.d("U1P","UPLOADING AT "+name);
             publishProgress(current);
             current=current+1;
         } catch (IOException e) {
+            status="failed";
             e.printStackTrace();
-            Log.d("U1P","foot");
+            dbsql.addUpload(details[0].getFile_name(),details[0].optional_link,details[0].getFile_name(),details[0].getLocation());            Log.d("U1P","foot");
         }
         finally {
+
             try {
                 client.disconnect();
             } catch (IOException e) {
@@ -145,7 +161,7 @@ public class upload extends AsyncTask<stream_details,Integer,Void> {
     protected void onPostExecute(Void aVoid) {
         mNotificationManager.cancel(0);
 
-        zBuilder.setContentTitle("Upload Completed")
+        zBuilder.setContentTitle("Upload "+status)
                 .setOngoing(false)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentInfo(size+" files have been uploaded");
