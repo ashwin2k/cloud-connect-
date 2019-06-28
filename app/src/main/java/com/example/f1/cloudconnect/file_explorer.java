@@ -10,6 +10,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -68,6 +70,8 @@ public class file_explorer extends AppCompatActivity {
     RelativeLayout bot;
     String uproot;
     Animation appear;
+    int folder_count;
+    int file_count;
     ArrayList<Integer> positions;
     FTPFile[] files;
     ImageView beer;
@@ -95,13 +99,13 @@ public class file_explorer extends AppCompatActivity {
     netAsyn async;
     DBHelper dbsql;
     Animation down;
-    downup downloader;
+    downup downloader;SharedPreferences preferences;
     AlertDialog.Builder alertDialogBuilder;
     Context con;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         positions=new ArrayList<>();
-        SharedPreferences preferences=this.getSharedPreferences("Themes",0);
+        preferences=this.getSharedPreferences("Themes",0);
         editor=preferences.edit();
         down=AnimationUtils.loadAnimation(this,R.anim.down);
         up=AnimationUtils.loadAnimation(this,R.anim.up);
@@ -131,8 +135,15 @@ public class file_explorer extends AppCompatActivity {
       load=findViewById(R.id.load);
         Button setloc=findViewById(R.id.default_location);
         TextView header=findViewById(R.id.header_text);
+        TextView help=findViewById(R.id.faq);
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utility.getHelp(con);
+            }
+        });
         header.setText("Explorer");
-        alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder = new AlertDialog.Builder(this, R.style.CustomAlertDialog);
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,7 +208,8 @@ public class file_explorer extends AppCompatActivity {
            @Override
            public void onItemCheckedStateChanged(ActionMode mode, final int position, long id, boolean checked) {
                final int checkedCount = gridView.getCheckedItemCount();
-
+               folder_count=0;
+               file_count=0;
                // Set the CAB title according to total checked items
                mode.setTitle(checkedCount + " Selected");
                if(checked) {
@@ -214,9 +226,9 @@ public class file_explorer extends AppCompatActivity {
                    @Override
                    public void onClick(View v) {
                        long bytesize=0;
-                       int folder_count=0;
-                       int file_count=0;
-
+                        folder_count=0;
+                        file_count=0;
+                        Log.d("INDEX",file_count+"");
                        for(int i:positions)
                    {
                        bytesize+=files[i].getSize();
@@ -232,11 +244,19 @@ public class file_explorer extends AppCompatActivity {
                        TextView direc=info.findViewById(R.id.pd_val);
                        TextView selinfo=info.findViewById(R.id.selected_info);
                        selinfo.setText(file_count+" files and "+folder_count +" folders");
-                       size.setText(Utility.sizeCap(bytesize));
-                       info.show();
-                       folder_count=0;
-                       file_count=0;
                        Log.d("DETAILS",file_count+" files "+folder_count+" folders");
+
+                       size.setText(Utility.sizeCap(bytesize));
+                       info.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                       info.show();
+                        info.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                positions=new ArrayList<>();
+                                file_count=0;
+                                folder_count=0;
+                            }
+                        });
                    }
                });
 
@@ -257,7 +277,6 @@ public class file_explorer extends AppCompatActivity {
                        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                            @Override
                            public void onClick(DialogInterface dialog, int which) {
-                               finish();
                            }
                        });
                        AlertDialog alertDialog=alertDialogBuilder.create();
@@ -306,10 +325,10 @@ public class file_explorer extends AppCompatActivity {
                        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                            @Override
                            public void onClick(DialogInterface dialog, int which) {
-                               finish();
                            }
                        });
                        AlertDialog alertDialog=alertDialogBuilder.create();
+
                        alertDialog.show();
 
 
@@ -388,7 +407,7 @@ public class file_explorer extends AppCompatActivity {
                             async = new netAsyn(admin, password, gate, con, new netAsyn.results() {
                                 @Override
                                 public void getFiles(FTPFile[] file,int connectionstat) {
-                                    Log.d("DELEGATE",file.length+"   "+url);
+
                                     Utility.setAnim(load,right);
                                     load.setVisibility(View.INVISIBLE);
 
@@ -400,7 +419,7 @@ public class file_explorer extends AppCompatActivity {
                                                 files=file;
                                                 Utility.setAnim(load,right);
                                                 load.setVisibility(View.INVISIBLE);
-                                                if(files.length==0)
+                                                if(files.length==0 || files==null)
                                                 {
                                                     trigger=1;
                                                     bot.setAnimation(down);
@@ -465,8 +484,9 @@ public class file_explorer extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-
-
+        positions=new ArrayList<>();
+        folder_count=0;
+        file_count=0;
         if(url.equals(root)||url.equals(root+'/')) {
 
             if(val)
@@ -489,11 +509,11 @@ public class file_explorer extends AppCompatActivity {
         async=new netAsyn(admin, password, gate, this, new netAsyn.results() {
             @Override
             public void getFiles(FTPFile[] file,int connectionstat) {
-                Log.d("DELEGATE",file.length+"");
+
                 files=file;
                 Utility.setAnim(load,right);
                 load.setVisibility(View.INVISIBLE);
-                if(files.length==0)
+                if(files.length==0 || files==null)
                 {
 
                     bot.setVisibility(View.INVISIBLE);
@@ -543,6 +563,8 @@ public class file_explorer extends AppCompatActivity {
         startActivityForResult(i, CODE);
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(data==null)
+            return;
         Uri uri=data.getData();
         try {
             InputStream inputStream=getContentResolver().openInputStream(uri);
@@ -550,7 +572,7 @@ public class file_explorer extends AppCompatActivity {
             stream_details.setInputStream(inputStream);
             stream_details.setFile_name(queryName(getContentResolver(),uri));
             stream_details.setLocation(url);
-            upload up=new upload(con,admin,password);
+            upload up=new upload(con,admin,password, preferences.getString("CurrentKey", null));
             up.execute(stream_details);
         } catch (FileNotFoundException e) {
             Log.d("inp","not found");

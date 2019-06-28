@@ -81,7 +81,13 @@
 
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
-
+    <string-array name="answers">
+        <item>A: Please check whether the username and password entered are correct. Also check for typographical mistakes in the server address(Ex. 192.168.0.1/ or ftp://192.168.0.1 may produce errors while connecting).</item>
+        <item>A: Try clearing the app cache.</item>
+        <item>A: Please check whether you’ve logged into the server in anonymous mode. Anonymous mode grants read-only permission. If the problem still persists, contact the server host.</item>
+        <item>A: Please ensure that you’re connected server is not in anonymous mode and that auto upload is enabled for the current server in Settings -> Manage server locations</item>
+    </string-array>
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="how_do_i_setup_a_ftp_server_on_my_router"><u>How do i setup a FTP server on my router?</u></string>
 
 </resources>

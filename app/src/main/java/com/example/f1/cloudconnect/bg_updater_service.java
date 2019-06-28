@@ -66,8 +66,8 @@ public class bg_updater_service extends Service {
         DBHelper dbsql=new DBHelper(this);
         preferences=this.getSharedPreferences("Themes",0);
         Log.d("SERVICE","IN SERVICE");
-        admin=dbsql.getAdmin(preferences.getString("CurrentKey",null));
-        pass=dbsql.getPassword(preferences.getString("CurrentKey",null));
+        admin=dbsql.getAdmin(preferences.getString("CurrentUploadKey",null));
+        pass=dbsql.getPassword(preferences.getString("CurrentUploadKey",null));
         fileObserver=new ArrayList<>();
         Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
 

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
@@ -45,6 +46,8 @@ public class downup extends AsyncTask<String,Void,Void> {
             try {
                 client.connect(g);
                 login = client.login(admin, password);
+                client.setFileType(FTP.BINARY_FILE_TYPE);
+
             } catch (IOException e) {
 
                 e.printStackTrace();

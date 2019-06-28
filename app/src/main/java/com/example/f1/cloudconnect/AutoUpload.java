@@ -2,24 +2,30 @@ package com.example.f1.cloudconnect;
 
 import android.app.ActivityManager;
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -27,17 +33,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AutoUpload extends AppCompatActivity {
     ArrayAdapter adapter;
     DBHelper dbsql;
+    Dialog d;
     boolean val=false;
+    ListView servers;
     PendingIntent auto;
     ArrayList<String> lis;
+    list_adapter list_adapter;
     AlarmManager alarmManager;
     SharedPreferences preferences;
+    ArrayList<String> keylist;
+    ArrayList<String> adminlist;
+    ArrayList<String> rootlist;
+    ArrayList<String> gatelist;
+    SharedPreferences.Editor editor;
     ListView direc;
     String admin;
     Calendar cal;
@@ -57,14 +72,21 @@ public class AutoUpload extends AppCompatActivity {
         TextView header=findViewById(R.id.header_text);
         header.setText("Backup");
         preferences=this.getSharedPreferences("Themes",0);
+        editor=preferences.edit();
         dbsql=new DBHelper(this);
         String cur_key=preferences.getString("CurrentKey",null);
         admin=dbsql.getAdmin(preferences.getString("CurrentKey",null));
         pass=dbsql.getPassword(preferences.getString("CurrentKey",null));
-
+        keylist = dbsql.getAllKeyname();
+        rootlist = dbsql.getAllRoots();
+        adminlist = dbsql.getAllAdmins();
+        gatelist = dbsql.getAllGateway();
+        list_adapter = new list_adapter(keylist, gatelist, adminlist, rootlist, this);
+        d=new Dialog(this);
+        d.setContentView(R.layout.backup_server_dialog);
+        servers=d.findViewById(R.id.servselect);
+        servers.setAdapter(list_adapter);
         final Intent i=new Intent(this,bg_updater_service.class);
-
-
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         NavigationView nav = findViewById(R.id.nav_view);
         Utility.menuOperations(nav,con,findViewById(android.R.id.content));
@@ -84,7 +106,7 @@ public class AutoUpload extends AppCompatActivity {
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
 
         Switch toggle=findViewById(R.id.switch1);
-        DBHelper dbsql=new DBHelper(this);
+        final DBHelper dbsql=new DBHelper(this);
         direc=findViewById(R.id.direc_list);
         lis=dbsql.getAllDirectories();
         adapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,lis);
@@ -109,12 +131,42 @@ public class AutoUpload extends AppCompatActivity {
                 direc.setAdapter(adapter);
             }
         });
+        TextView help=findViewById(R.id.faq);
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utility.getHelp(con);
+            }
+        });
         toggle.setChecked(isMyServiceRunning(bg_updater_service.class));
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    startService(i);
+                    d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    d.show();
+                    servers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            editor.putString("CurrentUploadKey",keylist.get(position));
+                            editor.commit();
+                            if(dbsql.getUploadDir(keylist.get(position)).equals("") || dbsql.getUploadDir(keylist.get(position)).equals(" ")){
+                                final Snackbar bar=Snackbar.make(findViewById(android.R.id.content),"Upload directory is not specified. \nThis may cause problems in some servers",Snackbar.LENGTH_INDEFINITE);
+                                Snackbar.SnackbarLayout barlay=(Snackbar.SnackbarLayout) bar.getView();
+                                bar.setAction("OK", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        bar.dismiss();
+                                    }
+                                });
+                                barlay.setBackgroundColor(Color.parseColor("#ff0000"));
+                                bar.show();
+                            }
+                            startService(i);
+                            d.dismiss();
+                        }
+                    });
+
 
                 }
                 else
@@ -129,8 +181,13 @@ public class AutoUpload extends AppCompatActivity {
                 Log.i("Test", "Result URI " + data.getData());
                 Uri docUri = DocumentsContract.buildDocumentUriUsingTree(data.getData(),
                         DocumentsContract.getTreeDocumentId(data.getData()));
-                String path = Utility.getPath(this, docUri);
-                Log.i("Test", "Result URI " + data.getData().getPath());
+                String path = null;
+                try {
+                    path = Utility.getPath(this, docUri);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                Log.i("Test", "Result URI1 " + path);
                 DBHelper dbsql=new DBHelper(this);
                 dbsql.addDirectory(path);
                 lis=dbsql.getAllDirectories();

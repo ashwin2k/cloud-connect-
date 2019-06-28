@@ -102,7 +102,7 @@ public class netAsyn extends AsyncTask<String,String,FTPFile[]> {
             dir = client.listFiles();
 
             for (FTPFile file : dir) {
-                Log.d("new", file.getSize() + "     " + file.getLink());
+                Log.d("new", file.getName() + "     " + file.getLink());
             }
 
 

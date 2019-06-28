@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.File;
@@ -86,6 +87,8 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
             try {
                 client.connect(g);
                 login = client.login(admin, password);
+                client.setFileType(FTP.BINARY_FILE_TYPE);
+
             } catch (IOException e) {
 
                 e.printStackTrace();
@@ -99,6 +102,7 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
         if (login) {
 
             Log.i("NAME1","Connection established...");
+
 
 
         } else {
@@ -145,7 +149,8 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
 
         Log.d("new", "1over");
         try {
-            fos.close();
+            if(fos!=null)
+                 fos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -6,22 +6,28 @@
     android:id="@+id/app_x"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:contentInsetStart="0dp"
-    android:elevation="20dp"
-    app:contentInsetEnd="0dp"
+
+    android:clipToPadding="false"
+    android:outlineProvider="bounds"    app:contentInsetEnd="0dp"
     android:layout_height="wrap_content">
 
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
             >
 
             <TableRow>
 
                 <RelativeLayout
+
                     android:layout_width="wrap_content"
                     android:layout_height="70dp"
                     android:layout_weight="0.4"
-                    android:background="@drawable/inter1">
+                    android:background="@drawable/inter1"
+                    android:elevation="10dp"
+                    android:hardwareAccelerated="true">
 
                     <TextView
                         android:id="@+id/header_text"
@@ -38,9 +44,12 @@
                 </RelativeLayout>
 
                 <TextView
-
+                    android:id="@+id/faq"
                     android:layout_width="100dp"
                     android:layout_gravity="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:text="Need Help?"
                     android:textColor="#CFC5C5"
                     android:textSize="13dp" />

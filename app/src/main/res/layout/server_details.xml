@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:padding="15dp"
+    android:background="@drawable/dialog_g"
     android:layout_width="350dp" android:layout_height="wrap_content">
     <TextView
         android:id="@+id/q1"

@@ -53,13 +53,13 @@ public class RecursiveFileObserver extends FileObserver {
                     e.printStackTrace();
                 }
                 stream_details sd=new stream_details();
-                sd.setLocation(dbsql.getUploadDir(preferences.getString("CurrentKey","")));
+                sd.setLocation(dbsql.getUploadDir(preferences.getString("CurrentUploadKey","")));
                 sd.setFile_name(path);
                 sd.optional_link=aboslutePath+path;
                 sd.setInputStream(in);
                 Log.d("FILE","CREATED at "+path);
                 Log.d("FILE","READY FOR UPLOAD ");
-                upload up=new upload(context,admin,pass);
+                upload up=new upload(context,admin,pass,preferences.getString("CurrentUploadKey",""));
                 up.execute(sd);
                 break;
             case FileObserver.DELETE:
@@ -70,7 +70,7 @@ public class RecursiveFileObserver extends FileObserver {
     }
     void upload(stream_details sdf)
     {
-        upload up=new upload(context,admin,pass);
+        upload up=new upload(context,admin,pass,preferences.getString("CurrentUploadKey",""));
         up.execute(sdf);
     }
 }

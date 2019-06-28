@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/nxt"
-    android:clickable="true"
-    android:focusable="true"
-    android:background="?android:attr/selectableItemBackground"
-     xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.card.MaterialCardView
     android:layout_width="350dp"
+
+    android:layout_centerHorizontal="true"
+
+    android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout
+
+    android:id="@+id/nxt"
+    android:background="?android:attr/selectableItemBackground"
+
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
+
     <ImageView
         android:layout_marginStart="10dp"
         android:layout_width="30dp"
@@ -42,16 +48,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
         android:text="92"
 
-        android:layout_marginEnd="10dp"/>
+        />
     <TextView
         android:textColor="?android:attr/textColorSecondary"
         android:id="@+id/optionalmbps"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:text="Mbps"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="10dp"
         android:textSize="15dp"
         android:layout_marginTop="7dp"
         android:layout_width="wrap_content"
@@ -59,3 +66,4 @@
         android:layout_height="wrap_content" />
 
 </RelativeLayout>
+</android.support.design.card.MaterialCardView>

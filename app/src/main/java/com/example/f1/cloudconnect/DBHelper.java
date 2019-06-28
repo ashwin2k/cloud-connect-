@@ -97,7 +97,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
     boolean checkExist(String name,int tabid)
-    {
+    { Log.d("SQL",name+"    ");
         SQLiteDatabase db=this.getWritableDatabase();
         if(tabid==0) {
             Cursor cursor = db.rawQuery("SELECT KEYNAME FROM NetworkKeyDB WHERE KEYNAME=?", new String[]{name});
@@ -119,6 +119,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 return false;
         }
         else{
+            Log.d("SQL DIR",name+ "");
             Cursor cursor = db.rawQuery("SELECT PATH FROM Directories WHERE PATH=?", new String[]{name});
             if (cursor.getCount() > 0)
                 return true;

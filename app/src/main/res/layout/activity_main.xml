@@ -55,14 +55,28 @@
             android:id="@+id/status_find"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@id/imageView"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="144dp"
+            android:layout_marginTop="50dp"
             android:text="Find devices"
 
 
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/routerhelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_alignParentBottom="true"
+            android:foreground="?android:selectableItemBackground"
+            android:layout_marginBottom="60dp"
+            android:elevation="5dp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/how_do_i_setup_a_ftp_server_on_my_router" />
 
 
     </RelativeLayout>

@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.File;
@@ -32,10 +33,12 @@ public class upload extends AsyncTask<stream_details,Integer,Void> {
     private NotificationCompat.Builder mBuilder,zBuilder;
     public static final String NOTIFICATION_CHANNEL_ID = "10001";
     String password;
+    String upload;
     String admin;
     DBHelper dbsql;
-    public upload(Context context,String admn,String pass)
+    public upload(Context context,String admn,String pass,String uploadkey)
     {
+        this.upload=uploadkey;
         mContext=context;
         this.admin=admn;
         this.password=pass;
@@ -74,7 +77,7 @@ public class upload extends AsyncTask<stream_details,Integer,Void> {
     @Override
     protected Void doInBackground(stream_details... details) {
         SharedPreferences preferences = mContext.getSharedPreferences("Themes", 0);
-        String gate=preferences.getString("CurrentKey","null");
+        String gate=upload;
         dbsql=new DBHelper(mContext);
         String g=dbsql.getGateway(gate);
         notifier(details);
@@ -83,7 +86,7 @@ public class upload extends AsyncTask<stream_details,Integer,Void> {
         if(client==null)
         {
             client = new FTPClient();
-            client.setConnectTimeout(5000);
+
             try {
                 client.connect(g);
             } catch (IOException e) {
@@ -96,6 +99,7 @@ public class upload extends AsyncTask<stream_details,Integer,Void> {
         boolean login = false;
         try {
             login = client.login(admin, password);
+            client.setFileType(FTP.BINARY_FILE_TYPE);
         } catch (IOException e) {
             status="failed";
             e.printStackTrace();
@@ -159,7 +163,6 @@ public class upload extends AsyncTask<stream_details,Integer,Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        mNotificationManager.cancel(0);
 
         zBuilder.setContentTitle("Upload "+status)
                 .setOngoing(false)

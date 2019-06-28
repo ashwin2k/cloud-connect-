@@ -13,6 +13,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ddcontent"
+
     android:layout_width="match_parent" android:layout_height="match_parent"
     >
     <include
@@ -35,7 +36,8 @@
         android:layout_below="@id/beer_mug"
         android:layout_marginTop="24dp"
         android:shadowColor="#000"
-        android:textSize="15dp"
+        android:textSize="19dp"
+        android:textStyle="bold|italic"
         android:textColor="?android:attr/textColorPrimary"
         android:text="It's empty.Just like my beer mug."
         android:textAlignment="center"/>

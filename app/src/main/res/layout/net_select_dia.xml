@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:background="?android:attr/colorBackground"
+    android:background="@drawable/dialog_g"
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="800dp"
-    android:paddingBottom="20dp">
+    android:layout_height="wrap_content"
+    android:paddingBottom="30dp">
     <TextView
         android:id="@+id/net_text"
         android:layout_marginStart="15dp"
@@ -19,6 +19,8 @@
         android:id="@+id/inc"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/net_text"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         layout="@layout/list_net_view"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
@@ -56,6 +58,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <ListView
+        android:layout_marginLeft="10dp"
+        android:layout_margin="10dp"
+        android:dividerHeight="5dp"
         android:layout_below="@id/prev_net"
         android:id="@+id/prevlist"
         android:layout_width="match_parent"

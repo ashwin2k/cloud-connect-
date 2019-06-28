@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <include
+        layout="@layout/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <ScrollView
+        android:layout_below="@id/app_x"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+
+                android:layout_marginTop="10dp"
+                android:id="@+id/j1"
+                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorPrimary"
+                android:text="• Connect your USB device to the USB port in your router as shown."/>
+
+            <ImageView
+                android:layout_margin="10dp"
+                android:layout_below="@id/j1"
+                android:id="@+id/j2"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:src="@drawable/router"/>
+            <TextView
+                android:autoLink="all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/j3"
+                android:layout_margin="10dp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:text="• To create an FTP server, please refer to your router’s manufacturer: \n\n
+• For D-Link routers: \n\n
+         https://www.dlink.com.vn/how-to-setup-a-ftp-server-access-on-the-dns320/dlink.com.vn/how-to-setup-a-ftp-server-access-on-the-dns-320 \n\n
+• For Netgear routers: \n\n
+         https://www.dlink.com.vn/how-to-setup-a-ftp-server-access-on-the-dns-320
+ \n\n • Open FTPGenie app and click on “Find Devices”
+ \n\n • Click on your network in the “In this network” section in the subsequent dialog box"
+                android:layout_below="@id/j2"/>
+            <ImageView
+                android:layout_margin="10dp"
+                android:layout_below="@id/j3"
+                android:id="@+id/j4"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:src="@drawable/net"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_below="@id/j4"
+                android:layout_marginTop="10dp"
+                android:id="@+id/j5"
+                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorPrimary"
+                android:text="• Enter the username and password:"/>
+            <ImageView
+                android:layout_margin="10dp"
+                android:layout_below="@id/j5"
+                android:id="@+id/j6"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:src="@drawable/logi"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_below="@id/j6"
+                android:layout_marginTop="10dp"
+                android:id="@+id/j7"
+                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorPrimary"
+                android:text="• You are now connected to your FTP server! Cheers!"/>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

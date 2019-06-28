@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import android.support.design.widget.NavigationView;
@@ -27,10 +29,12 @@ public class allservers extends AppCompatActivity {
     ArrayList<String> adminlist;
     ArrayList<String> rootlist;
     ArrayList<String> gatelist;
+    ArrayList<String> uploadlis;
     list_adapter adapter;
     ListView lis;
     Dialog details;
     DBHelper dbsql;
+
     TextView sevid;
     TextView gatid;
     Context con;
@@ -50,7 +54,13 @@ public class allservers extends AppCompatActivity {
         header.setText("Servers");
         NavigationView nav = findViewById(R.id.nav_view);
         Utility.menuOperations(nav,this,findViewById(android.R.id.content));
-
+        TextView help=findViewById(R.id.faq);
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utility.getHelp(con);
+            }
+        });
         final RelativeLayout content = findViewById(R.id.dd);
 
         DrawerLayout drawerLayout = findViewById(R.id.draw_menu);
@@ -74,10 +84,12 @@ public class allservers extends AppCompatActivity {
         rootlist=new ArrayList<>();
         gatelist=new ArrayList<>();
         adminlist=new ArrayList<>();
+        uploadlis=new ArrayList<>();
         dbsql=new DBHelper(this);
         keylist=dbsql.getAllKeyname();
         rootlist=dbsql.getAllRoots();
         adminlist=dbsql.getAllAdmins();
+
         delete=details.findViewById(R.id.delete_net);
 
         gatelist=dbsql.getAllGateway();
@@ -92,7 +104,8 @@ public class allservers extends AppCompatActivity {
                     sevid.setText(keylist.get(position));
                     gatid.setText(gatelist.get(position));
                     admid.setText(adminlist.get(position));
-                    rootid.setText(rootlist.get(position));
+                    rootid.setText(dbsql.getUploadDir(keylist.get(position)));
+                     details.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     details.show();
                     delete.setOnClickListener(new View.OnClickListener() {
                         @Override

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import org.w3c.dom.Text;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 
 public class recieve_share extends AppCompatActivity {
     Uri uri;
@@ -31,13 +33,14 @@ public class recieve_share extends AppCompatActivity {
     View dial;
     TextView filenm;
     String admin;
+    TextView device;
     String pass;
-    DBHelper dbsql;
+    DBHelper dbsql;SharedPreferences preferences;
     TextView uploc;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         con=this;
-        SharedPreferences preferences=this.getSharedPreferences("Themes",0);
+       preferences =this.getSharedPreferences("Themes",0);
         Boolean choice=preferences.getBoolean("CurrentTheme",false);
         dbsql=new DBHelper(this);
 
@@ -73,14 +76,30 @@ public class recieve_share extends AppCompatActivity {
 
 
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this,R.style.CustomAlertDialog);
         alert.setTitle("Confirm Upload?");
+
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.dialog, null);
         alert.setView(alertLayout);
         uploc=alertLayout.findViewById(R.id.uploc);
         filenm=alertLayout.findViewById(R.id.filename);
-        String txt=file_explorer.queryName(getContentResolver(),uri);
+        String txt=new String();
+        try {
+            txt=Utility.getPath(this,uri);
+
+            Log.d("LOG",Utility.getPath(this,uri));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        device=alertLayout.findViewById(R.id.device);
+        int cur=txt.length()-1;
+
+        while(txt.charAt(cur)!='/')
+        {
+            cur--;
+        }
+        txt=txt.substring(cur+1,txt.length());
         if(txt.length()>8)
         {
             filenm.setText(txt.substring(0,8)+"...");
@@ -88,13 +107,14 @@ public class recieve_share extends AppCompatActivity {
         else
             filenm.setText(txt);
         uploc.setText(dbsql.getUploadDir(preferences.getString("CurrentKey",null)));
+        device.setText(preferences.getString("CurrentKey",null));
         alert.setCancelable(false);
         alert.setPositiveButton("Upload", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
 
-                    upload up=new upload(con,admin,pass);
+                    upload up=new upload(con,admin,pass,preferences.getString("CurrentKey",""));
                     up.execute(stream_details);
                     finish();
 

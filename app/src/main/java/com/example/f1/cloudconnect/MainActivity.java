@@ -11,12 +11,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.support.annotation.NonNull;
+import android.support.design.card.MaterialCardView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -119,7 +122,13 @@ import java.util.concurrent.ExecutionException;
                 adminlist = dbsql.getAllAdmins();
                 gatelist = dbsql.getAllGateway();
                 list_adapter = new list_adapter(keylist, gatelist, adminlist, rootlist, this);
-
+                TextView help=findViewById(R.id.faq);
+                help.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Utility.getHelp(con);
+                    }
+                });
 
                 Toolbar mTopToolbar = (Toolbar) findViewById(R.id.app_x);
                 TextView header = findViewById(R.id.header_text);
@@ -150,7 +159,13 @@ import java.util.concurrent.ExecutionException;
                     }
                 };
                 drawerLayout.addDrawerListener(actionBarDrawerToggle);
-
+                TextView rh=findViewById(R.id.routerhelp);
+                rh.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(con,ConnectHelp.class));
+                    }
+                });
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -175,12 +190,13 @@ import java.util.concurrent.ExecutionException;
 
                                 dia = new Dialog(con);
                                 dia.setContentView(R.layout.net_select_dia);
-
-                                pri = dia.findViewById(R.id.prim);
-                                secon = dia.findViewById(R.id.sec);
-                                ter = dia.findViewById(R.id.tert);
+                                dia.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                MaterialCardView nxt = dia.findViewById(R.id.inc);
+                                pri = nxt.findViewById(R.id.prim);
+                                secon = nxt.findViewById(R.id.sec);
+                                ter = nxt.findViewById(R.id.tert);
                                 secon.setText(Utility.getgate(con));
-                                RelativeLayout nxt = dia.findViewById(R.id.inc);
+
                                 prevloc = dia.findViewById(R.id.prevlist);
                                 prevloc.setAdapter(list_adapter);
                                 prevloc.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -203,6 +219,7 @@ import java.util.concurrent.ExecutionException;
                                 nxt.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        adminpass.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                         adminpass.show();
                                         sendadmin = adminpass.findViewById(R.id.get_admin_send);
                                         sendpass = adminpass.findViewById(R.id.get_password_send);
@@ -249,7 +266,7 @@ import java.util.concurrent.ExecutionException;
                                     public void onClick(View v) {
                                         manual = new Dialog(con);
                                         manual.setContentView(R.layout.key_edit);
-
+                                        manual.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                         manual.show();
                                         anonymous = manual.findViewById(R.id.anonymous_admn);
                                         name = manual.findViewById(R.id.get_name);

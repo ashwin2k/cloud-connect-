@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -37,7 +39,13 @@ public class settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set);
 
-
+        TextView help=findViewById(R.id.faq);
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utility.getHelp(con);
+            }
+        });
         NavigationView nav = findViewById(R.id.nav_view);
         Utility.menuOperations(nav,con,findViewById(android.R.id.content));
 
@@ -60,7 +68,7 @@ public class settings extends AppCompatActivity {
         header.setText("Settings");
         thm=new Dialog(this);
         thm.setContentView(R.layout.thme_select);
-
+        thm.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
 
 

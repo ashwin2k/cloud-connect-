@@ -5,12 +5,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:contentInsetStart="0dp"
     app:contentInsetEnd="0dp"
-    android:background="#373542"
+    android:outlineProvider="bounds"
+    android:background="?android:attr/colorBackground"
+    android:clipToPadding="false"
+    android:outlineSpotShadowColor="#000"
+    android:elevation="30dp"
     android:layout_gravity="bottom"
     android:layout_height="wrap_content">
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="55dp"
+        android:elevation="20dp"
         >
     <TableRow
         android:clickable="true"
@@ -21,6 +26,7 @@
 
 
         <ImageView
+            android:tint="?android:attr/textColorPrimary"
             android:clickable="true"
             android:focusable="true"
             android:background="?android:attr/selectableItemBackground"
@@ -34,6 +40,7 @@
             app:srcCompat="@drawable/ic_upload" />
 
         <ImageView
+            android:tint="?android:attr/textColorPrimary"
             android:clickable="true"
             android:focusable="true"
             android:background="?android:attr/selectableItemBackground"
@@ -62,19 +69,8 @@
             app:srcCompat="@drawable/ic_download" />
         </RelativeLayout>
         <ImageView
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?android:attr/selectableItemBackground"
-            android:elevation="5dp"
-            android:id="@+id/copy"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="15dp"
 
-            android:layout_weight="1"
-            app:srcCompat="@drawable/ic_copy" />
-
-        <ImageView
+            android:tint="?android:attr/textColorPrimary"
             android:clickable="true"
             android:focusable="true"
             android:background="?android:attr/selectableItemBackground"
@@ -85,6 +81,21 @@
             android:elevation="5dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_share" />
+        <ImageView
+            android:tint="?android:attr/textColorPrimary"
+            android:id="@+id/copy"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:elevation="5dp"
+
+            android:focusable="true"
+            app:srcCompat="@drawable/round_info_24" />
+
+
     </TableRow>
     </TableLayout>
 </android.support.v7.widget.Toolbar>

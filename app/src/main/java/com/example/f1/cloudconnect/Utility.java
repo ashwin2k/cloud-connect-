@@ -1,5 +1,6 @@
 package com.example.f1.cloudconnect;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ContentResolver;
@@ -28,11 +29,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.math.BigInteger;
 import java.net.InetAddress;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 import java.text.DecimalFormat;
@@ -43,12 +46,17 @@ import static android.content.Context.WIFI_SERVICE;
 
 public class Utility {
 
-
+    public static void getHelp(Context context)
+    {
+        Intent i=new Intent(context,HelpActivity.class);
+        context.startActivity(i);
+    }
     public static void setAnim(RelativeLayout r, Animation anim)
     {
         r.setAnimation(anim);
         r.startAnimation(anim);
     }
+
 
     public static String getCurrentSSId(Context context)
     {
@@ -68,6 +76,11 @@ public class Utility {
 
         }
         return ssid;
+    }
+    public static String ftype(String file)
+    {
+        int len=file.length();
+        return file.substring(file.indexOf('.')+1,len);
     }
     public static int getLinkSpeed(Context context)
     {
@@ -130,12 +143,11 @@ public class Utility {
     public static void menuOperations(NavigationView nav, final Context con, final View view) {
         final LayoutInflater inflater=(LayoutInflater)con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         SharedPreferences preferences = con.getSharedPreferences("Themes", 0);
-        final String cur_key = preferences.getString("CurrentKey", null);
+        final String cur_key = preferences.getString("CurrentKey", " ");
         nav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 DBHelper dbsql = new DBHelper(con);
-                boolean servsize=dbsql.checkExist(cur_key, 0);
                 int id = item.getItemId();
                 if (id == R.id.setting) {
                     Log.d("MAX", "add");
@@ -148,6 +160,8 @@ public class Utility {
                     con.startActivity(men);
                 }
                 if (id == R.id.backup) {
+                    boolean servsize=dbsql.checkExist(cur_key, 0);
+
                     if(servsize) {
                         Log.d("MAX", "setting");
                         Intent men = new Intent(con, AutoUpload.class);
@@ -165,6 +179,7 @@ public class Utility {
                     }
                 }
                 if(id==R.id.exp){
+                    boolean servsize=dbsql.checkExist(cur_key, 0);
 
                     if (servsize) {
                         Intent ff = new Intent(con, file_explorer.class);
@@ -252,10 +267,14 @@ public class Utility {
 
 
 
-    public static String getPath(final Context context, final Uri uri) {
-
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
+    public static String getPath(final Context context, final Uri uri) throws URISyntaxException {
+        File file=new File(uri.getPath());
+        Log.d("PATH",file.getAbsolutePath());
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
+        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.O)
+        {
+            return getFilePath2(context,uri);
+        }
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
@@ -341,39 +360,84 @@ public class Utility {
         }
         return null;
     }
+    @SuppressLint("NewApi")
+    public static String getFilePath2(Context context, Uri uri) throws URISyntaxException {
+        String selection = null;
+        String[] selectionArgs = null;
+        // Uri is different in versions after KITKAT (Android 4.4), we need to
+        if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(context.getApplicationContext(), uri)) {
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                return Environment.getExternalStorageDirectory() + "/" + split[1];
+            } else if (isDownloadsDocument(uri)) {
+                final String id = DocumentsContract.getDocumentId(uri);
+                uri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+            } else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+                if ("image".equals(type)) {
+                    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+                selection = "_id=?";
+                selectionArgs = new String[]{
+                        split[1]
+                };
+            }
+        }
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
 
 
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is ExternalStorageProvider.
-     */
+            if (isGooglePhotosUri(uri)) {
+                return uri.getLastPathSegment();
+            }
+
+            String[] projection = {
+                    MediaStore.Images.Media.DATA
+            };
+            Cursor cursor = null;
+            try {
+                cursor = context.getContentResolver()
+                        .query(uri, projection, selection, selectionArgs, null);
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(column_index);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
+    }
+
     public static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is DownloadsProvider.
-     */
     public static boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is MediaProvider.
-     */
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is Google Photos.
-     */
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is ExternalStorageProvider.
+     */
+
 
 
 

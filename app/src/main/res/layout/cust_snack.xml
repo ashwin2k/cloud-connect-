@@ -2,7 +2,7 @@
 <RelativeLayout
     android:id="@+id/cust"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#373542"
+    android:background="@drawable/gradient"
     android:layout_width="match_parent" android:layout_height="50dp">
     <TextView
         android:layout_centerVertical="true"

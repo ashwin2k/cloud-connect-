@@ -11,9 +11,12 @@
         <item name="android:colorBackground">@color/background_material_dark</item>
         <item name="android:textColorSecondary">@color/text_color_secondary</item>
         <item name="android:textColorPrimary">@color/text_color_primary</item>
+        <item name="android:colorForeground">@color/foreground_material_dark</item>
     </style>
 
-
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_g</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
