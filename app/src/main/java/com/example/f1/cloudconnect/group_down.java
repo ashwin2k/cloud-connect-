@@ -2,7 +2,11 @@ package com.example.f1.cloudconnect;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
@@ -13,6 +17,8 @@ import android.util.Log;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.io.CopyStreamAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,10 +37,13 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
     boolean login;
     boolean status;
     FileOutputStream fos;
+    int links;
     int progress=0;
     int size=100;
     File output;
+    FTPClient client = null;
     String password;
+    long filesize=0;
     String admin;
     public group_down(Context context,String admn,String pass)
     {
@@ -42,6 +51,8 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
         this.admin=admn;
         this.password=pass;
     }
+
+
     public void notifier(ArrayList<String> arrayLists)
     {
 
@@ -49,8 +60,9 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
         mBuilder = new NotificationCompat.Builder(mContext);
         zBuilder = new NotificationCompat.Builder(mContext);
         mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+
         mBuilder.setContentTitle("Downloading")
-                .setContentText(arrayLists.size()+" files")
+                .setContentText(current+" out of "+arrayLists.size()+" files")
                 .setAutoCancel(false)
                 .setOngoing(true)
                 .setProgress(arrayLists.size(),progress,true);
@@ -81,7 +93,7 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
         String g=dbsql.getGateway(gate);
         notifier(arrayLists[0]);
         files=new ArrayList<>();
-        FTPClient client = null;
+        links=arrayLists[0].size();
         if (client == null) {
             client = new FTPClient();
             try {
@@ -96,7 +108,6 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
 
         }
 
-
         // If login is true notify user
 
         if (login) {
@@ -110,10 +121,36 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
         }
         fos=null;
         current=1;
-        for(String link: arrayLists[0])
+        for(final String link: arrayLists[0])
         {
+
             try {
                 client.changeWorkingDirectory(extract(link));
+                Log.d("BYTR",popper(link)+"NEED");
+                try {
+                    FTPFile[] file=client.listFiles();
+                    for(FTPFile f:file)
+                    {
+                        if(f.getName().equals(popper(link)))
+                            filesize+=f.getSize();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                CopyStreamAdapter streamListener = new CopyStreamAdapter() {
+
+                    @Override
+                    public void bytesTransferred(long totalBytesTransferred, int bytesTransferred, long streamSize) {
+                        Log.d("BYTR",filesize+"GG");
+                        Log.d("BYTR",totalBytesTransferred+"GG");
+                        long current=100*totalBytesTransferred/filesize;
+                        Log.d("BYTR",(int)current+"");
+                        publishProgress((int)current);
+                    }
+
+                };
+                client.setCopyStreamListener(streamListener);
                 fos = new FileOutputStream("/storage/emulated/0/"+popper(link));
                 Log.i("NAME1",popper(link));
                 status=client.retrieveFile(popper(link), fos);
@@ -134,14 +171,16 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
         }
         return files;
     }
+
+
+
     @Override
     protected void onPostExecute(ArrayList<Uri> aVoid) {
         mNotificationManager.cancel(0);
-
         zBuilder.setContentTitle("Download Completed")
                 .setOngoing(false)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentInfo(size+" files have been downloaded");
+                .setContentText(size+" files have been downloaded");
         if(current<size)
             zBuilder.setContentText(size-current+" files failed to download");
         mNotificationManager.notify(1,zBuilder.build());
@@ -157,10 +196,14 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
 
     }
 
+
+
     @Override
     protected void onProgressUpdate(Integer... values) {
 
-        mBuilder.setProgress(size,values[0],false)
+        Log.d("BYTRPROG",values[0]+"");
+            mBuilder.setProgress(100,values[0].intValue(),false)
+                    .setContentText(current+" out of "+size+" files")
                 .setOngoing(true);
         mNotificationManager.notify(0,mBuilder.build());
         super.onProgressUpdate(values);
@@ -186,4 +229,5 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
         }
         return str.substring(0, new_len-1);
     }
+
 }

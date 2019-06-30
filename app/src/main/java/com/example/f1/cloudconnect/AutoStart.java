@@ -12,6 +12,7 @@ public class AutoStart extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent i=new Intent(context,bg_updater_service.class);
+        String act=intent.getAction();
         Log.d("RECIEVER","RECIEVD");
         context.startForegroundService(i);
 
