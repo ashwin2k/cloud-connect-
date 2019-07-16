@@ -1,38 +1,31 @@
 package com.example.f1.cloudconnect;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.core.app.NotificationCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,24 +35,20 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-
-import static org.apache.commons.net.ftp.FTPFile.DIRECTORY_TYPE;
 
 
 public class file_explorer extends AppCompatActivity {
@@ -73,15 +62,18 @@ public class file_explorer extends AppCompatActivity {
     Animation appear;
     int folder_count;
     int file_count;
+    RelativeLayout fold;
     ArrayList<Integer> positions;
     FTPFile[] files;
-    ImageView beer;
     int trigger;
     int p;
+    Dialog loading;
     RelativeLayout cust;
     RelativeLayout load;
+    Dialog av,d;
     String filename;
     String admin;
+    int prot=0;
     String password;
     boolean val=false;
     String gate;
@@ -100,6 +92,7 @@ public class file_explorer extends AppCompatActivity {
     netAsyn async;
     DBHelper dbsql;
     Animation down;
+    LottieAnimationView lottie;
     downup downloader;SharedPreferences preferences;
     AlertDialog.Builder alertDialogBuilder;
     Context con;
@@ -120,20 +113,25 @@ public class file_explorer extends AppCompatActivity {
         con=this;
         dbsql=new DBHelper(this);
         final String url_intent=getIntent().getStringExtra("current");
-
+        loading=new Dialog(con);
+        loading.setCancelable(false);
+        loading.setContentView(R.layout.loadingdia);
+        loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        loading.setCanceledOnTouchOutside(false);
         url=dbsql.getRoot(url_intent);
         root=dbsql.getRoot(url_intent);
-
         admin=dbsql.getAdmin(url_intent);
         password=dbsql.getPassword(url_intent);
         gate=dbsql.getGateway(url_intent);
         uproot=dbsql.getUploadDir(url_intent);
         setContentView(R.layout.file_explorer_layout);
+        lottie=findViewById(R.id.lottie);
+
         Toolbar mTopToolbar = (Toolbar) findViewById(R.id.app_x);
         bot=findViewById(R.id.bot_bar);
         ImageView upload=findViewById(R.id.upload);
-      cust=findViewById(R.id.cust);
-      load=findViewById(R.id.load);
+        cust=findViewById(R.id.cust);
+        load=findViewById(R.id.load);
         Button setloc=findViewById(R.id.default_location);
         TextView header=findViewById(R.id.header_text);
         TextView help=findViewById(R.id.faq);
@@ -148,8 +146,44 @@ public class file_explorer extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                av=new Dialog(con);
+                av.setContentView(R.layout.getfilename);
+                    d=new Dialog(con);
+                    d.setContentView(R.layout.add_select);
+                    d.show();
+                    d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    RelativeLayout create=d.findViewById(R.id.creadtedir);
+                    create.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            av.show();
+                            av.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    openFile(866);
+                            final EditText getname=av.findViewById(R.id.getnm);
+                            Button cre=av.findViewById(R.id.create);
+                            cre.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    direc_operations mke=new direc_operations(con,admin,password,"MKE");
+                                    mke.setFilename(getname.getText().toString());
+                                    mke.setDir(url);
+                                    mke.execute();
+                                    asyn();
+                                    av.dismiss();
+                                    d.dismiss();
+                                }
+                            });
+
+                        }
+                    });
+                    RelativeLayout upload=d.findViewById(R.id.uploadinto);
+                    upload.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            openFile(866);
+                        }
+                    });
+
 
 
             }
@@ -204,13 +238,13 @@ public class file_explorer extends AppCompatActivity {
 
 
         gridView=findViewById(R.id.gridview);
+
         gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
        gridView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
            @Override
            public void onItemCheckedStateChanged(ActionMode mode, final int position, long id, boolean checked) {
                final int checkedCount = gridView.getCheckedItemCount();
-               folder_count=0;
-               file_count=0;
+
                // Set the CAB title according to total checked items
                mode.setTitle(checkedCount + " Selected");
                if(checked) {
@@ -226,9 +260,10 @@ public class file_explorer extends AppCompatActivity {
                info.setOnClickListener(new View.OnClickListener() {
                    @Override
                    public void onClick(View v) {
+
                        long bytesize=0;
-                        folder_count=0;
-                        file_count=0;
+                       file_count=0;
+                       folder_count=0;
                         Log.d("INDEX",file_count+"");
                        for(int i:positions)
                    {
@@ -247,20 +282,27 @@ public class file_explorer extends AppCompatActivity {
                        selinfo.setText(file_count+" files and "+folder_count +" folders");
                        Log.d("DETAILS",file_count+" files "+folder_count+" folders");
 
+                       if(url.length()>=8)
+                       {
+                           direc.setText("..."+url.substring(url.lastIndexOf('/'),url.length()));
+                       }
+                       else
+                           direc.setText(url);
                        size.setText(Utility.sizeCap(bytesize));
+
+
                        info.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                        info.show();
                         info.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
-                                positions=new ArrayList<>();
                                 file_count=0;
                                 folder_count=0;
+
                             }
                         });
                    }
                });
-
                ImageView imageView=findViewById(R.id.download);
                imageView.setOnClickListener(new View.OnClickListener() {
                    @Override
@@ -318,8 +360,9 @@ public class file_explorer extends AppCompatActivity {
                        alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                            @Override
                            public void onClick(DialogInterface dialog, int which) {
-                               direc_operations del=new direc_operations(con,admin,password);
+                               direc_operations del=new direc_operations(con,admin,password,"DEL");
                                del.execute(links);
+                               asyn();
                                Toast.makeText(getApplicationContext(), "DELETING "+checkedCount+" files",Toast.LENGTH_SHORT).show();
                            }
                        });
@@ -356,7 +399,9 @@ public class file_explorer extends AppCompatActivity {
 
            @Override
            public void onDestroyActionMode(ActionMode mode) {
-                        links.clear();
+               positions=new ArrayList<>();
+
+               links.clear();
            }
        });
 
@@ -364,111 +409,12 @@ public class file_explorer extends AppCompatActivity {
         TextView headertext=findViewById(R.id.header_text);
         headertext.setText("Explorer");
         funnytext=findViewById(R.id.funny_text);
-        beer=findViewById(R.id.beer_mug);
 
 
 
         //Initial Loading of files in root directory
+        asyn();
 
-        async=new netAsyn(admin, password, gate, this, new netAsyn.results() {
-            @Override
-            public void getFiles(FTPFile[] file,int connectionstat) {
-
-                files=file;
-                Utility.setAnim(load,right);
-                load.setVisibility(View.INVISIBLE);
-                if(connectionstat==0) {
-
-
-                    beer.setImageResource(R.drawable.pooky);
-                    beer.setVisibility(View.VISIBLE);
-                    beer.setAnimation(appear);
-                    beer.startAnimation(appear);
-                    funnytext.setVisibility(View.VISIBLE);
-                    trigger=1;
-                    bot.setAnimation(down);
-                    bot.startAnimation(down);
-                    funnytext.setText("Pooky is sad.\n" + "He could'nt connect to your server right now");
-                    Toast.makeText(con, "Can't connect", Toast.LENGTH_LONG).show();
-                }
-                else {
-
-                    trigger=0;
-                    beer.setVisibility(View.INVISIBLE);
-                    funnytext.setVisibility(View.INVISIBLE);
-
-                    adapter = new grid_adapter(files, getApplicationContext());
-                    gridView.setAdapter(adapter);
-                    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                            filename = files[position].getName();
-                            url = url + "/" + filename;
-                            p=position;
-                            async = new netAsyn(admin, password, gate, con, new netAsyn.results() {
-                                @Override
-                                public void getFiles(FTPFile[] file,int connectionstat) {
-
-                                    Utility.setAnim(load,right);
-                                    load.setVisibility(View.INVISIBLE);
-
-                                    if (files[p].isDirectory()) {
-
-                                        async=new netAsyn(admin, password, gate, con, new netAsyn.results() {
-                                            @Override
-                                            public void getFiles(FTPFile[] file,int connectionstat) {
-                                                files=file;
-                                                Utility.setAnim(load,right);
-                                                load.setVisibility(View.INVISIBLE);
-                                                if(files.length==0 || files==null)
-                                                {
-                                                    trigger=1;
-                                                    bot.setAnimation(down);
-                                                    bot.startAnimation(down);
-                                                    beer.setImageResource(R.drawable.beer_mug);
-                                                    beer.setVisibility(View.VISIBLE);
-                                                    beer.setAnimation(appear);
-                                                    beer.startAnimation(appear);
-                                                    funnytext.setVisibility(View.VISIBLE);
-                                                    funnytext.setText("Empty.Just like my beer mug.");
-                                                }
-                                                else{
-                                                    trigger=0;
-                                                    beer.setVisibility(View.INVISIBLE);
-                                                    funnytext.setVisibility(View.INVISIBLE);
-                                                }
-                                                adapter.updatelist(files);
-                                                adapter.notifyDataSetChanged();
-                                                gridView.setAdapter(adapter);
-                                            }
-                                        });
-                                        Utility.setAnim(load,left);
-                                        load.setVisibility(View.VISIBLE);
-                                        async.execute(url);
-                                    }
-                                    else {
-                                        beer.setVisibility(View.INVISIBLE);
-                                        funnytext.setVisibility(View.INVISIBLE);
-                                        downloader = new downup(admin, password,con);
-                                        downloader.execute(url);
-                                        Toast.makeText(getApplicationContext(), "Downloading" + url, Toast.LENGTH_SHORT).show();
-
-                                        url = popper(url);
-                                    }
-                                }
-                            });
-                            async.execute(url);
-
-                        }
-                    });
-
-                }
-            }
-        });
-
-            Utility.setAnim(load,left);
-            load.setVisibility(View.VISIBLE);
-            async.execute(url);
 
 
 
@@ -485,6 +431,7 @@ public class file_explorer extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
+
         positions=new ArrayList<>();
         folder_count=0;
         file_count=0;
@@ -505,25 +452,37 @@ public class file_explorer extends AppCompatActivity {
             },2000);
             return;
         }
-
+        loading.show();
         url=popper(url);
         async=new netAsyn(admin, password, gate, this, new netAsyn.results() {
             @Override
             public void getFiles(FTPFile[] file,int connectionstat) {
-
+                loading.dismiss();
                 files=file;
                 Utility.setAnim(load,right);
                 load.setVisibility(View.INVISIBLE);
-                if(files.length==0 || files==null)
-                {
-
-                    bot.setVisibility(View.INVISIBLE);
-                    beer.setImageResource(R.drawable.beer_mug);
-                    beer.setVisibility(View.VISIBLE);
-                    beer.setAnimation(appear);
-                    beer.startAnimation(appear);
+                if(files==null){
+                    trigger = 1;
+                    bot.setAnimation(down);
+                    bot.startAnimation(down);
+                    lottie.setAnimationFromUrl("https://assets8.lottiefiles.com/packages/lf20_q50fug.json");
+                    lottie.setVisibility(View.VISIBLE);
+                    lottie.setAnimation(appear);
+                    lottie.startAnimation(appear);
                     funnytext.setVisibility(View.VISIBLE);
-                    funnytext.setText("Empty.Just like my beer mug.");
+                    funnytext.setText("Error connecting to your server");
+                }
+                else if (files.length == 0) {
+                    trigger = 1;
+                    bot.setAnimation(down);
+                    bot.startAnimation(down);
+                    lottie.setAnimationFromUrl("https://assets10.lottiefiles.com/datafiles/hYQRPx1PLaUw8znMhjLq2LdMbklnAwVSqzrkB4wG/bag_error.json");
+                    lottie.setVisibility(View.VISIBLE);
+                    lottie.setAnimation(appear);
+                    lottie.startAnimation(appear);
+                    funnytext.setVisibility(View.VISIBLE);
+
+                    funnytext.setText("Empty.\nThat's all we got!");
                 }
                 else
                 {
@@ -531,17 +490,17 @@ public class file_explorer extends AppCompatActivity {
                         bot.setAnimation(up);
                         bot.startAnimation(up);
                     }
-
-                    beer.setVisibility(View.INVISIBLE);
+                    lottie.setVisibility(View.INVISIBLE);
                     funnytext.setVisibility(View.INVISIBLE);
-                }adapter.updatelist(files);
-                adapter.notifyDataSetChanged();
-                gridView.setAdapter(adapter);
+                    adapter.updatelist(files);
+                    adapter.notifyDataSetChanged();
+                    gridView.setAdapter(adapter);
+                }
             }
         });
         Utility.setAnim(load,left);
         load.setVisibility(View.VISIBLE);
-             async.execute(url);
+        async.execute(url);
 
 
 
@@ -585,7 +544,166 @@ public class file_explorer extends AppCompatActivity {
 
 
     }
+    public void asyn(){
+        loading.show();
 
+        async=new netAsyn(admin, password, gate, this, new netAsyn.results() {
+            @Override
+            public void getFiles(FTPFile[] file,int connectionstat) {
+                loading.dismiss();
+                files=file;
+                Utility.setAnim(load,right);
+                load.setVisibility(View.INVISIBLE);
+                if(connectionstat==0) {
+
+                    lottie.setAnimationFromUrl("https://assets8.lottiefiles.com/packages/lf20_q50fug.json");
+                    lottie.setVisibility(View.VISIBLE);
+                    lottie.setAnimation(appear);
+                    lottie.startAnimation(appear);
+                    funnytext.setVisibility(View.VISIBLE);
+                    trigger=1;
+                    bot.setAnimation(down);
+                    bot.startAnimation(down);
+                    funnytext.setText("Error connecting to your server");
+                    Toast.makeText(con, "Can't connect", Toast.LENGTH_LONG).show();
+                }
+                else {
+
+                    trigger=0;
+                    lottie.setVisibility(View.INVISIBLE);
+                    funnytext.setVisibility(View.INVISIBLE);
+
+                    adapter = new grid_adapter(files, getApplicationContext());
+                    gridView.setAdapter(adapter);
+                    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+                            loading.show();
+                            filename = files[position].getName();
+                            url = url + "/" + filename;
+                            p=position;
+                            loading.show();
+
+                            async = new netAsyn(admin, password, gate, con, new netAsyn.results() {
+                                @Override
+                                public void getFiles(FTPFile[] file,int connectionstat) {
+
+
+                                    Utility.setAnim(load,right);
+                                    load.setVisibility(View.INVISIBLE);
+
+                                    if (files[p].isDirectory()) {
+
+                                        gridView.setClickable(false);
+                                        async = new netAsyn(admin, password, gate, con, new netAsyn.results() {
+                                            @Override
+                                            public void getFiles(FTPFile[] file, int connectionstat) {
+                                                loading.dismiss();
+                                                files = file;
+                                                gridView.setClickable(true);
+                                                Utility.setAnim(load, right);
+                                                load.setVisibility(View.INVISIBLE);
+                                                if(files==null){
+                                                    trigger = 1;
+                                                    bot.setAnimation(down);
+                                                    bot.startAnimation(down);
+                                                    lottie.setAnimationFromUrl("https://assets8.lottiefiles.com/packages/lf20_q50fug.json");
+                                                    lottie.setVisibility(View.VISIBLE);
+                                                    lottie.setAnimation(appear);
+                                                    lottie.startAnimation(appear);
+                                                    funnytext.setVisibility(View.VISIBLE);
+
+                                                    adapter.updatelist(files);
+                                                    adapter.notifyDataSetChanged();
+                                                    gridView.setAdapter(adapter);
+                                                }
+                                                else if (files.length == 0) {
+                                                    trigger = 1;
+                                                    bot.setAnimation(down);
+                                                    bot.startAnimation(down);
+                                                    lottie.setAnimationFromUrl("https://assets10.lottiefiles.com/datafiles/hYQRPx1PLaUw8znMhjLq2LdMbklnAwVSqzrkB4wG/bag_error.json");
+                                                    lottie.setVisibility(View.VISIBLE);
+                                                    lottie.setAnimation(appear);
+                                                    lottie.startAnimation(appear);
+                                                    funnytext.setVisibility(View.VISIBLE);
+                                                    funnytext.setText("Empty.\nThat's all we got!");
+                                                    adapter.updatelist(files);
+                                                    adapter.notifyDataSetChanged();
+                                                    gridView.setAdapter(adapter);
+                                                } else {
+                                                    trigger = 0;
+                                                    lottie.setVisibility(View.INVISIBLE);
+
+                                                    funnytext.setVisibility(View.INVISIBLE);
+                                                    adapter.updatelist(files);
+                                                    adapter.notifyDataSetChanged();
+                                                    gridView.setAdapter(adapter);
+                                                }
+
+                                            }
+
+                                        });
+
+                                        Utility.setAnim(load,left);
+                                        load.setVisibility(View.VISIBLE);
+                                        async.execute(url);
+
+                                    }
+                                    else {
+                                        loading.dismiss();
+
+                                        lottie.setVisibility(View.INVISIBLE);
+                                        funnytext.setVisibility(View.INVISIBLE);
+
+
+                                        alertDialogBuilder.setTitle("Confirm download");
+
+                                        alertDialogBuilder.setMessage("Download "+1+" files?");
+                                        alertDialogBuilder.setPositiveButton("Download", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                group_down downloader= new group_down(con,admin, password);
+                                                ArrayList g=new ArrayList<String>();
+                                                g.add(url);
+                                                downloader.execute(g);
+                                                Toast.makeText(getApplicationContext(), "Downloading " + url.substring(url.lastIndexOf('/')+1,url.length()), Toast.LENGTH_SHORT).show();
+                                                Log.d("DOWN",url);
+                                            }
+                                        });
+                                        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        });
+                                        AlertDialog alertDialog=alertDialogBuilder.create();
+                                        alertDialog.show();
+                                        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog) {
+                                                url = url.substring(0,url.lastIndexOf('/'));
+                                                Log.d("ALERT","Dismissed");
+                                            }
+                                        });
+
+                                    }
+                                }
+                            });
+                            async.execute(url);
+
+
+                        }
+                    });
+
+                }
+            }
+        });
+
+        Utility.setAnim(load,left);
+        load.setVisibility(View.VISIBLE);
+        async.execute(url);
+
+    }
     public static String queryName(ContentResolver resolver, Uri uri) {
         Cursor returnCursor =
                 resolver.query(uri, null, null, null, null);
@@ -596,5 +714,6 @@ public class file_explorer extends AppCompatActivity {
         returnCursor.close();
         return name;
     }
+
 
 }

@@ -1,8 +1,6 @@
 package com.example.f1.cloudconnect;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -20,17 +18,15 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -39,7 +35,6 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 import java.text.DecimalFormat;
-import java.util.Formatter;
 
 import static android.content.Context.WIFI_SERVICE;
 
@@ -66,7 +61,6 @@ public class Utility {
         if (nin == null) {
             return null;
         }
-
         if (nin.isConnected()) {
             final WifiManager wifiManager = (WifiManager) context.getSystemService(WIFI_SERVICE);
             final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
@@ -116,7 +110,7 @@ public class Utility {
             // TODO Auto-generated catch block
             Log.e("Wifi Class", "Error getting Hotspot IP address ", e);
         }
-        return "null";
+        return null;
     }
     public static String queryName(ContentResolver resolver, Uri uri) {
         Cursor returnCursor =
@@ -150,12 +144,12 @@ public class Utility {
                 DBHelper dbsql = new DBHelper(con);
                 int id = item.getItemId();
                 if (id == R.id.setting) {
-                    Log.d("MAX", "add");
+                    Log.d("MAX", "add_menu");
                     Intent men = new Intent(con, settings.class);
                     con.startActivity(men);
                 }
                 if (id == R.id.add) {
-                    Log.d("MAX", "add");
+                    Log.d("MAX", "add_menu");
                     Intent men = new Intent(con, MainActivity.class);
                     con.startActivity(men);
                 }
@@ -169,7 +163,7 @@ public class Utility {
                     }
                    else{
 
-                        Snackbar.make(view,"Please add a server and try again!",Snackbar.LENGTH_LONG).setAction("Dismiss", new View.OnClickListener() {
+                        Snackbar.make(view,"Please add_menu a server and try again!",Snackbar.LENGTH_LONG).setAction("Dismiss", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 // Call your action method here
@@ -187,7 +181,7 @@ public class Utility {
                         con.startActivity(ff);
                     }
                     else{
-                        Snackbar.make(view,"Please add a server and try again!",Snackbar.LENGTH_LONG).setAction("Dismiss", new View.OnClickListener() {
+                        Snackbar.make(view,"Please add_menu a server and try again!",Snackbar.LENGTH_LONG).setAction("Dismiss", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
@@ -281,8 +275,10 @@ public class Utility {
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
+                if(split.length==1)
+                    return Environment.getExternalStorageDirectory() + "/" ;
                 final String type = split[0];
-
+                Log.d("COVERT",type+"       "+uri.getPath());
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
@@ -369,6 +365,9 @@ public class Utility {
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
+                if(split.length==1)
+                     return Environment.getExternalStorageDirectory() + "/" ;
+
                 return Environment.getExternalStorageDirectory() + "/" + split[1];
             } else if (isDownloadsDocument(uri)) {
                 final String id = DocumentsContract.getDocumentId(uri);

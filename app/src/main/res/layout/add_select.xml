@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/dialog_g"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:paddingEnd="30dp"
+    android:paddingStart="30dp"
+    android:paddingBottom="30dp"
+    android:paddingTop="30dp">
+    <TextView
+    android:layout_centerHorizontal="true"
+    android:text="Select"
+    android:id="@+id/str"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:textColor="?android:attr/textColorPrimary"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:padding="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/creadtedir"
+        android:layout_marginTop="20dp"
+        android:foreground="?android:selectableItemBackground"
+        android:layout_below="@id/str"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <ImageView
+        android:tint="?android:attr/textColorPrimary"
+
+        android:elevation="5dp"
+        android:src="@drawable/add_menu"
+        android:id="@+id/kj"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+
+        <TextView
+            android:layout_marginStart="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/kj"
+            android:text="Create directory"
+            android:tint="?android:attr/textColorPrimary"
+            android:textSize="18dp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:padding="5dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:id="@+id/uploadinto"
+        android:layout_marginTop="10dp"
+        android:foreground="?android:selectableItemBackground"
+        android:layout_below="@id/creadtedir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:tint="?android:attr/textColorPrimary"
+
+            android:elevation="5dp"
+            android:src="@drawable/ic_upload"
+            android:id="@+id/kj1"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:layout_marginStart="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/kj1"
+            android:text="Upload file"
+            android:tint="?android:attr/textColorPrimary"
+            android:textSize="18dp" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -139,6 +139,7 @@ public class DBHelper extends SQLiteOpenHelper {
             result.add(res.getString(res.getColumnIndex("PATH")));
             res.moveToNext();
         }
+        db.close();
         return result;
     }
     ArrayList<String> getAllKeyname()
@@ -197,11 +198,13 @@ public class DBHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase db=this.getWritableDatabase();
         db.delete("NetworkKeyDB","KEYNAME= ?",new String[]{key});
+        db.close();
     }
     void deleteALlDirec()
     {
         SQLiteDatabase db=this.getWritableDatabase();
         db.execSQL("delete from "+ "Directories");
+        db.close();
     }
     String getGateway(String key)
     {
@@ -243,6 +246,7 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
         }
+        db.close();
         return cursor.getString(5);
     }
 
@@ -258,6 +262,7 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
         }
+        db.close();
         return cursor.getString(2);
     }
     String getPassword(String key)
@@ -272,6 +277,7 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
         }
+        db.close();
         return cursor.getString(3);
     }
 }

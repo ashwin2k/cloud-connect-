@@ -3,7 +3,7 @@ package com.example.f1.cloudconnect;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.support.v7.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import org.apache.commons.net.ftp.FTPFile;
-
-import java.util.ArrayList;
 
 public class grid_adapter extends BaseAdapter {
     FTPFile[] file_list;
@@ -34,6 +32,8 @@ public class grid_adapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
+        if(file_list==null)
+            return 0;
         return file_list.length;
     }
 

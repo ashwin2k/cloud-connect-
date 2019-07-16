@@ -1,23 +1,21 @@
 package com.example.f1.cloudconnect;
 
-import android.Manifest;
-import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.MenuItem;
+import androidx.annotation.NonNull;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.app.ActivityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -46,7 +44,7 @@ public class settings extends AppCompatActivity {
                 Utility.getHelp(con);
             }
         });
-        NavigationView nav = findViewById(R.id.nav_view);
+        NavigationView nav =findViewById(R.id.nav_view);
         Utility.menuOperations(nav,con,findViewById(android.R.id.content));
 
         final RelativeLayout content = findViewById(R.id.dd);
@@ -128,7 +126,16 @@ public class settings extends AppCompatActivity {
                 startActivity(sev);
             }
         });
+        RelativeLayout mail=findViewById(R.id.suggest);
+        mail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent email=new Intent(Intent.ACTION_SENDTO);
+                email.setData(Uri.parse("mailto:ashwin102000@gmail.com"));
+                startActivity(Intent.createChooser(email, "Send feedback"));
 
+            }
+        });
 
 
 

@@ -54,8 +54,8 @@ public class netAsyn extends AsyncTask<String,String,FTPFile[]> {
         if (client == null) {
             Log.d("FTP","null");
             client = new FTPClient();
-            client.setControlKeepAliveTimeout(10);
-            client.setConnectTimeout(10000);
+            client.setControlKeepAliveTimeout(20);
+            client.setConnectTimeout(20000);
             try {
                 client.connect(g);
                 connection=1;
@@ -64,37 +64,40 @@ public class netAsyn extends AsyncTask<String,String,FTPFile[]> {
 
             } catch (IOException e) {
                 connection=0;
-                e.printStackTrace();
-                try {
+                e.printStackTrace();try {
                     client.disconnect();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
 
                 Log.d("new", "Connection failed...");
-                return null;
-            }
+                return dir;
 
-        }
+
+            }
+            }
 
         boolean login = false;
         try {
+            connection=0;
             login = client.login(admin, password);
             if(login) {
                 connection = 1;
-                Log.d("new", "Connection established...");
+                Log.d("new", "login established...");
             }
             else
-            {
+            {                Log.d("new", "login failed...");
+
                 connection=0;
                 client.disconnect();
+                return dir;
 
-                Log.d("new", "Connection failed...");
 
             }
 
             if (isCancelled()) { Log.d("new", "over");
                 Log.d("new", "over");
+                connection=0;
 
                 return null;
             }

@@ -1,29 +1,21 @@
 package com.example.f1.cloudconnect;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 
 public class recieve_share extends AppCompatActivity {
     Uri uri;
@@ -85,26 +77,13 @@ public class recieve_share extends AppCompatActivity {
         uploc=alertLayout.findViewById(R.id.uploc);
         filenm=alertLayout.findViewById(R.id.filename);
         String txt=new String();
-        try {
-            txt=Utility.getPath(this,uri);
 
-            Log.d("LOG",Utility.getPath(this,uri));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+            txt=file_explorer.queryName(getContentResolver(),uri);
+
+            Log.d("LOG",uri.toString());
+
         device=alertLayout.findViewById(R.id.device);
-        int cur=txt.length()-1;
 
-        while(txt.charAt(cur)!='/')
-        {
-            cur--;
-        }
-        txt=txt.substring(cur+1,txt.length());
-        if(txt.length()>8)
-        {
-            filenm.setText(txt.substring(0,8)+"...");
-        }
-        else
             filenm.setText(txt);
         uploc.setText(dbsql.getUploadDir(preferences.getString("CurrentKey",null)));
         device.setText(preferences.getString("CurrentKey",null));

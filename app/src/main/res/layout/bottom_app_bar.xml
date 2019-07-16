@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/app_bottom"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -37,7 +37,7 @@
             android:layout_column="1"
             android:layout_margin="15dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_upload" />
+            app:srcCompat="@drawable/add_menu" />
 
         <ImageView
             android:tint="?android:attr/textColorPrimary"
@@ -98,4 +98,4 @@
 
     </TableRow>
     </TableLayout>
-</android.support.v7.widget.Toolbar>
+</androidx.appcompat.widget.Toolbar>

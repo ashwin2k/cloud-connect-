@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.card.MaterialCardView
+<com.google.android.material.card.MaterialCardView
     android:layout_width="350dp"
 
     android:layout_centerHorizontal="true"
@@ -66,4 +66,4 @@
         android:layout_height="wrap_content" />
 
 </RelativeLayout>
-</android.support.design.card.MaterialCardView>
+</com.google.android.material.card.MaterialCardView>

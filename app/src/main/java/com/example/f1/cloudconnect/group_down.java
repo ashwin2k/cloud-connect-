@@ -2,17 +2,14 @@ package com.example.f1.cloudconnect;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.FileProvider;
 import android.util.Log;
 
 import org.apache.commons.net.ftp.FTP;
@@ -104,6 +101,7 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
             } catch (IOException e) {
 
                 e.printStackTrace();
+                return files;
             }
 
         }
@@ -125,7 +123,9 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
         {
 
             try {
+                Log.d("THIS",link);
                 client.changeWorkingDirectory(extract(link));
+
                 Log.d("BYTR",popper(link)+"NEED");
                 try {
                     FTPFile[] file=client.listFiles();
@@ -159,8 +159,9 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
                     current = current + 1;
                 }
                 Log.d("DOWN", "DOWNLOADING"+link);
-                files.add(Uri.parse("/storage/emulated/0/"+popper(link)));
-                Log.d("FILES"," "+files.size());
+                files.add(FileProvider.getUriForFile(mContext,BuildConfig.APPLICATION_ID + ".fileprovider",new File("/storage/emulated/0/"+popper(link))));
+
+                Log.d("FILES"," "+files.toString());
                 if(fos!=null)
                     fos.close();
 
@@ -176,13 +177,17 @@ public class group_down extends AsyncTask<ArrayList<String >,Integer,ArrayList<U
 
     @Override
     protected void onPostExecute(ArrayList<Uri> aVoid) {
-        mNotificationManager.cancel(0);
-        zBuilder.setContentTitle("Download Completed")
+
+            mNotificationManager.cancel(0);
+
+            zBuilder.setContentTitle("Download Completed")
                 .setOngoing(false)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentText(size+" files have been downloaded");
-        if(current<size)
-            zBuilder.setContentText(size-current+" files failed to download");
+        if(current<size) {
+            zBuilder.setContentText(size - current + " files failed to download")
+                    .setContentTitle("Download Error");
+        }
         mNotificationManager.notify(1,zBuilder.build());
         super.onPostExecute(aVoid);
 

@@ -4,24 +4,15 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.SocketException;
-import java.net.URI;
-import java.util.ArrayList;
 
 public class upload extends AsyncTask<stream_details,Integer,Void> {
     private Context mContext;
@@ -164,10 +155,12 @@ public class upload extends AsyncTask<stream_details,Integer,Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
 
+        mNotificationManager.cancel(0);
+
         zBuilder.setContentTitle("Upload "+status)
                 .setOngoing(false)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentInfo(size+" files have been uploaded");
+                .setContentText(size+" files have been uploaded");
         mNotificationManager.notify(1,zBuilder.build());
         super.onPostExecute(aVoid);
 

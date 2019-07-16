@@ -2,37 +2,28 @@ package com.example.f1.cloudconnect;
 
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.LayoutTransition;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
-import android.provider.DocumentsContract;
-import android.support.annotation.NonNull;
-import android.support.design.card.MaterialCardView;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.widget.Toolbar;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -46,20 +37,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPFile;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
-        public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
             public ArrayList<FTPFile> listfile = null;
             ArrayList<String> keylist;
             ArrayList<String> adminlist;
@@ -72,7 +54,7 @@ import java.util.concurrent.ExecutionException;
             EditText sendpass;
             ListView prevloc;
             EditText name;
-            Dialog dia;
+            Dialog dia,f;
             Intent men;
             Context con;
             EditText admn;
@@ -132,7 +114,7 @@ import java.util.concurrent.ExecutionException;
 
                 Toolbar mTopToolbar = (Toolbar) findViewById(R.id.app_x);
                 TextView header = findViewById(R.id.header_text);
-                header.setText(R.string.act_name);
+                header.setText("Welcome!");
                 setSupportActionBar(mTopToolbar);
                 mTopToolbar.setContentInsetsAbsolute(0, 0);
                 mTopToolbar.getContentInsetEnd();
@@ -181,7 +163,6 @@ import java.util.concurrent.ExecutionException;
                         v.setAnimation(rotate);
                         status.setText("Finding devices");
 
-                        url = Utility.getgate(con);
 
 
                         new Handler().postDelayed(new Runnable() {
@@ -189,7 +170,9 @@ import java.util.concurrent.ExecutionException;
                             public void run() {
 
                                 dia = new Dialog(con);
+
                                 dia.setContentView(R.layout.net_select_dia);
+                                dia.setCanceledOnTouchOutside(false);
                                 dia.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 MaterialCardView nxt = dia.findViewById(R.id.inc);
                                 pri = nxt.findViewById(R.id.prim);
@@ -244,16 +227,36 @@ import java.util.concurrent.ExecutionException;
                                         sendadminpass.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
+                                                url = Utility.getgate(con);
 
                                                 admin = sendadmin.getText().toString();
                                                 pass = sendpass.getText().toString();
-                                                dbsql.addKey(Utility.getCurrentSSId(con), url, admin, pass,"", " ");
-                                                editor.putString("CurrentKey", Utility.getCurrentSSId(con));
-                                                editor.apply();
-                                                Intent i = new Intent(getApplicationContext(), file_explorer.class);
-                                                i.putExtra("current", Utility.getCurrentSSId(con));
-                                                startActivity(i);
-                                                dia.dismiss();
+                                                Log.d("URL",url+"");
+                                                if(url!=null) {
+                                                    Log.d("URL",url+"ex");
+
+                                                    dbsql.addKey(Utility.getCurrentSSId(con), url, admin, pass, "", " ");
+                                                    editor.putString("CurrentKey", Utility.getCurrentSSId(con));
+                                                    editor.apply();
+                                                    Intent i = new Intent(getApplicationContext(), file_explorer.class);
+                                                    i.putExtra("current", Utility.getCurrentSSId(con));
+                                                    startActivity(i);
+                                                    dia.dismiss();
+                                                }
+                                                else
+                                                {
+                                                    f=new Dialog(con);
+                                                    f.setContentView(R.layout.disconnect);
+                                                    f.setCancelable(false);
+                                                    f.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                                    f.show();
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            f.dismiss();
+                                                        }
+                                                    },6000);
+                                                }
                                             }
                                         });
 

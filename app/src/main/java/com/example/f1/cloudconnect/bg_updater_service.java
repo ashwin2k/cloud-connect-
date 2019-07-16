@@ -8,18 +8,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.Build;
-import android.os.Environment;
-import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class bg_updater_service extends Service {

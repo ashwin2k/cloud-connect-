@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/dialog_g"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:paddingEnd="30dp"
+    android:paddingStart="30dp"
+    android:paddingBottom="30dp"
+    android:paddingTop="15dp">
+    <TextView
+        android:clickable="true"
+        android:foreground="?android:selectableItemBackground"
+        android:textSize="25dp"
+        android:text="Enter folder name"
+        android:layout_centerHorizontal="true"
+        android:textColor="?android:attr/textColorPrimary"
+        android:id="@+id/efn"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="true" />
+    <EditText
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/efn"
+        android:layout_width="250dp"
+        android:id="@+id/getnm"
+        android:layout_height="wrap_content" />
+    <Button
+        android:layout_below="@id/getnm"
+        android:id="@+id/create"
+        android:layout_marginTop="10dp"
+        android:text="Create"
+        android:background="?android:attr/colorPrimary"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:textColor="#FFF"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

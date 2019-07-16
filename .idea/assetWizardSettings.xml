@@ -35,8 +35,8 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_no_wifi" />
-                            <entry key="sourceFile" value="D:\Downloads\no-wifi.svg" />
+                            <entry key="outputName" value="add" />
+                            <entry key="sourceFile" value="D:\Downloads\baseline-add_circle-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

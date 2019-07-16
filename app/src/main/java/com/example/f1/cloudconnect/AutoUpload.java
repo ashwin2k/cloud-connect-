@@ -13,26 +13,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.DocumentsContract;
-import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -126,7 +123,7 @@ public class AutoUpload extends AppCompatActivity {
                 DBHelper dbsql=new DBHelper(con);
                 dbsql.deleteALlDirec();
                 lis=dbsql.getAllDirectories();
-                adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
                 adapter=new ArrayAdapter(con,android.R.layout.simple_list_item_1,lis);
                 direc.setAdapter(adapter);
             }
@@ -178,7 +175,9 @@ public class AutoUpload extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
             case 9999:
-                Log.i("Test", "Result URI " + data.getData());
+              //  Log.i("Test", "Result URI " + data.getData());
+                if(data==null)
+                    break;
                 Uri docUri = DocumentsContract.buildDocumentUriUsingTree(data.getData(),
                         DocumentsContract.getTreeDocumentId(data.getData()));
                 String path = null;
