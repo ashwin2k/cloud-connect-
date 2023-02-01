@@ -9,6 +9,8 @@ Download it from ![here.](https://play.google.com/store/apps/details?id=com.clou
 4) Mordern GUI that can connect/save several devices
 5) Support for both light and dark modes
 ## For demo video, click ![here.](https://drive.google.com/drive/folders/11OS90odRbsCcW9Vx8ZN78afAhEpAx_jG?usp=share_link)
+## To run the app
+Clone the project and build the apk using Android Studio!
 ## Screenshots
 ![vlcsnap-2023-02-01-02h57m02s556](https://user-images.githubusercontent.com/42934189/215984491-1e2ccaa4-1699-4946-8cb9-194eda5e6fe8.png)
 ![vlcsnap-2023-02-01-02h57m11s066](https://user-images.githubusercontent.com/42934189/215984493-f505174f-fcfc-4e28-9919-88d366964a41.png)
